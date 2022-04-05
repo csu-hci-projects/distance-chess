@@ -25,6 +25,7 @@ TAR Chess/[Uu]ser[Ss]ettings/
 
 # Visual Studio cache directory
 TAR Chess/.vs/
+TAR Chess/.vscode/
 
 # Gradle cache directory
 TAR Chess/.gradle/

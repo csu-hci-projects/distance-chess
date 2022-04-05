@@ -1,4 +1,4 @@
 # distance-chess
-## Tangible Augmented Reality Chess Game
+## Tangible Augmented Reality (TAR) Chess Game
 - Andreas Johnson
 - Isaac Mount
