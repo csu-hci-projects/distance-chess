@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Board : MonoBehaviour {
     public string[,] position = new string[8,8];
-    public bool isSetUp = false;
     void Start() {
         
     }

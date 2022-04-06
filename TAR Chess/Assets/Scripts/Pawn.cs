@@ -7,20 +7,18 @@ public class Pawn : MonoBehaviour {
     public bool white, alive;
     public string position;
     public string[] possibleMoves;
-    private bool needsUpdate;
 
     void Start() {
         possibleMoves = new string[4];
-        needsUpdate = true;
         float init_x = (float) Utils.file(position);
         float init_z = (float) Utils.rank(position);
         transform.localPosition = new Vector3(init_x, 0, init_z);
-        Debug.Log(position + " : " + transform.localPosition);
         board.put((white? "w":"b") + "p", position);
+        updatePossibleMoves();
     }
 
     void Update() {
-        if(needsUpdate && board.isSetUp) updatePossibleMoves();
+        
     }
 
     string pawnForwardMove(bool fast = false) {
@@ -41,6 +39,7 @@ public class Pawn : MonoBehaviour {
         possibleMoves[2] = pawnTakeMove(true);
         possibleMoves[3] = pawnTakeMove(false);
         checkMoveSpace();
+        ++(Utils.numPiecesUpdated);
     }
     private void checkMoveSpace() {
         if(!allowedMove(possibleMoves[0])) possibleMoves[0] = null;
