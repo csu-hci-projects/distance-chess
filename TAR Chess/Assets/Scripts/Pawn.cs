@@ -7,39 +7,31 @@ public class Pawn : MonoBehaviour {
     public bool white, alive;
     public string position;
     public string[] possibleMoves;
-    const string FILE = "ABCDEFGH", RANK = "12345678";
+    private bool needsUpdate;
 
     void Start() {
-        board.put("wp", position);
         possibleMoves = new string[4];
-        updatePossibleMoves();
+        needsUpdate = true;
+        float init_x = (float) Utils.file(position);
+        float init_z = (float) Utils.rank(position);
+        transform.localPosition = new Vector3(init_x, 0, init_z);
+        Debug.Log(position + " : " + transform.localPosition);
+        board.put((white? "w":"b") + "p", position);
     }
 
     void Update() {
-        
+        if(needsUpdate && board.isSetUp) updatePossibleMoves();
     }
 
     string pawnForwardMove(bool fast = false) {
-        return getMoveTile(0,(white? 1:-1)*(fast? 2:1));
+        return Utils.positionFrom(position, 0, (white? 1:-1)*(fast? 2:1));
     }
     string pawnTakeMove(bool left) {
         int fileChange = white?1:-1;
         if(left) fileChange *= -1;
-        return getMoveTile(fileChange, white?1:-1);
+        return Utils.positionFrom(position, fileChange, white?1:-1);
     }
 
-    string getMoveTile(int fileChange, int rankChange) {
-        int file = getFile() + fileChange;
-        int rank = getRank() + rankChange;
-        if(file < 0 || file > 7 || rank < 0 || rank > 7)
-            return null;
-        else return
-            FILE.Substring(file,1) +
-            RANK.Substring(rank,1);
-    }
-
-    int getFile() { return Board.file(position); }
-    int getRank() { return Board.rank(position); }
 
     public void updatePossibleMoves() {
         possibleMoves[0] = pawnForwardMove();
