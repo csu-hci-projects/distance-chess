@@ -25,10 +25,13 @@ This will primarily be built for iOS, but future builds could include Android.
   - [ ] bishops
   - [ ] queens
 - [ ] Board scripting
-  - [x] records piece positions
-  - [x] tracks pins on pieces
-  - [x] tracks attacks on tiles for allowed king movement
+  - [x] piece positions
+  - [ ] checks & checkmates
+  - [x] pins on pieces
+  - [x] attacks on tiles (for recognizing illegal king movement)
+  - [ ] captures
   - [ ] en passant captures
+  - [ ] pawn promotions
 - [ ] Computer Vision
   - [ ] recognizes pieces
   - [ ] recognizes moves
