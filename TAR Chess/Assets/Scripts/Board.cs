@@ -34,4 +34,8 @@ public class Board : MonoBehaviour {
         if(file < 0 || file > 7 || rank < 0 || rank > 7) return;
         position[file,rank] = value;
     }
+
+    public bool needsUpdate(string position) {
+        return false;
+    }
 }
