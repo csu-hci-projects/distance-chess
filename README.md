@@ -4,6 +4,28 @@
 - Isaac Mount
 
 # Project Overview
+## Current Progress
+- [ ] Rendering of pieces
+  - [x] basic piece and board rendering
+  - [ ] only renders opponents' pieces
+  - [ ] occlusion
+- [ ] Piece move scripting
+  - [x] pawns
+  - [ ] kings
+  - [ ] rooks
+  - [ ] knights
+  - [ ] bishops
+  - [ ] queens
+- [ ] Board scripting
+  - [x] records piece positions
+  - [x] tracks pins on pieces
+  - [x] tracks attacks on tiles for allowed king movement
+  - [ ] en passant captures
+- [ ] Computer Vision
+  - [ ] recognizes pieces
+  - [ ] recognizes moves
+  - [ ] checks for captures on player's pieces
+  - [ ] highlights legal move tiles when player picks up piece
 
 # Outside Resources
 ## Software: Unity
