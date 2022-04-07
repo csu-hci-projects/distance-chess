@@ -10,9 +10,6 @@ public class Board : MonoBehaviour {
     void Start() {
         kingPosition = new Dictionary<bool, string>();
         pins = new List<string>();
-        Debug.Log("Position B2 between A3-C1? " + Utils.positionBetween("A3","B2","C1"));
-        Debug.Log("Position B6 between A5-D8? " + Utils.positionBetween("A5","B6","D8"));
-        Debug.Log("Position B4 between A3-C1? " + Utils.positionBetween("A3","B4","C1"));
     }
 
     // Update is called once per frame
@@ -24,25 +21,29 @@ public class Board : MonoBehaviour {
         return pieceAt(Utils.file(position),Utils.rank(position));
     }
     public string pieceAt(int file, int rank) {
-        if(file < 0 || file > 7 || rank < 0 || rank > 7) return "INV";
+        if(file < 0 || file > 7 || rank < 0 || rank > 7) return null;
         else return position[file,rank];
     }
 
     public void put(string value, string position) {
         put(value,Utils.file(position),Utils.rank(position));
+        if(value[1] == 'k') kingPosition[value[0] == 'w'] = position;
     }
     public void put(string value, int file, int rank) {
         if(file < 0 || file > 7 || rank < 0 || rank > 7) return;
         position[file,rank] = value;
     }
 
+    // used for pins primarily; TODO for non-king-pawn scripting
     public bool needsUpdate(string position) {
         return false;
     }
 
     public bool movePiece(string fromPosition, string toPosition) {
+        if(fromPosition is null) return false;
         string movingPiece = pieceAt(fromPosition);
         if(movingPiece is null) return false;
+        if(toPosition is null) return false;
 
         bool moverWhite = movingPiece[0] == 'w';
         char moverType = movingPiece[1];
@@ -74,8 +75,10 @@ public class Board : MonoBehaviour {
             return;
         }
         char num = attackersOf[file,rank][white? 1:3];
+        // a maximum of 9 pieces can attack a square at once,
+        // save some extreme exceptions which are extremely unlikely
+        if(num == '9') return;
         num++;
-
         attackersOf[file,rank] = updatedAttackers(attackersOf[file,rank], white, num);
     }
     public void removeAttacker(bool white, string position) {
