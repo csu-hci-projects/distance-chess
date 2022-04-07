@@ -26,9 +26,10 @@ This will primarily be built for iOS, but future builds could include Android.
   - [ ] queens
 - [ ] Board scripting
   - [x] piece positions
-  - [ ] checks & checkmates
-  - [x] pins on pieces
   - [x] attacks on tiles (for recognizing illegal king movement)
+  - [ ] checks & checkmates
+  - [ ] stalemates
+  - [x] pins on pieces
   - [ ] captures
   - [ ] en passant captures
   - [ ] pawn promotions
