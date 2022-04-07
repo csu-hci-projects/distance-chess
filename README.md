@@ -15,9 +15,10 @@ This will primarily be built for iOS, but future builds could include Android.
 ## Current Progress
 - [ ] Rendering of pieces
   - [x] basic piece and board rendering
-  - [ ] only renders opponents' pieces
+  - [ ] only renders opponents' pieces (in progress)
   - [ ] occlusion
 - [ ] Piece move scripting
+  - [ ] animations (in progress)
   - [x] pawns
   - [ ] kings
   - [ ] rooks
@@ -26,11 +27,11 @@ This will primarily be built for iOS, but future builds could include Android.
   - [ ] queens
 - [ ] Board scripting
   - [x] piece positions
-  - [x] attacks on tiles (for recognizing illegal king movement)
-  - [ ] checks & checkmates
+  - [ ] attacks on tiles (in progress)
+  - [ ] checks & checkmates (in progress)
   - [ ] stalemates
-  - [x] pins on pieces
-  - [ ] captures
+  - [ ] pins on pieces (in progress)
+  - [ ] captures (in progress)
   - [ ] en passant captures
   - [ ] pawn promotions
 - [ ] Computer Vision
