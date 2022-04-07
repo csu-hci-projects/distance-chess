@@ -17,6 +17,8 @@ public class Pawn : MonoBehaviour {
         transform.localPosition = new Vector3(init_x, 0, init_z);
         board.put((white? "w":"b") + "p", position);
         updatePossibleMoves();
+        board.addAttacker(white, possibleMoves[2]);
+        board.addAttacker(white, possibleMoves[3]);
     }
 
     void Update() {
@@ -30,23 +32,33 @@ public class Pawn : MonoBehaviour {
         }
     }
 
-    string pawnForwardMove(bool fast = false) {
+    string pawnForwardMovePosition(bool fast = false) {
         return Utils.positionFrom(position, 0, (white? 1:-1)*(fast? 2:1));
     }
-    string pawnTakeMove(bool left) {
+    string pawnTakeMovePosition(bool left) {
         int fileChange = white?1:-1;
         if(left) fileChange *= -1;
         return Utils.positionFrom(position, fileChange, white?1:-1);
     }
 
+    void initiateMove(int index) {
+        if(possibleMoves[index] is null) return;
+
+        if(!board.movePiece(position, possibleMoves[index])) {
+            possibleMoves[index] = null;
+            return;
+        }
+
+        updatePossibleMoves();
+    }
 
     public void updatePossibleMoves() {
-        possibleMoves[0] = pawnForwardMove();
+        possibleMoves[0] = pawnForwardMovePosition();
         if(position[1] == (white? '2':'7'))
-            possibleMoves[1] = pawnForwardMove(true);
+            possibleMoves[1] = pawnForwardMovePosition(true);
         else forbidMove(1);
-        possibleMoves[2] = pawnTakeMove(true);
-        possibleMoves[3] = pawnTakeMove(false);
+        possibleMoves[2] = pawnTakeMovePosition(true);
+        possibleMoves[3] = pawnTakeMovePosition(false);
         checkMoveSpace();
         checkPins();
     }
