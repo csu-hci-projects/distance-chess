@@ -94,6 +94,7 @@ public class Utils : MonoBehaviour
         return new Vector3(f, 0, r);
     }
     public static bool pieceAt(Transform transform, String position) {
+        if(position is null || position.Length != 2) return false;
         if(_MOVE_position is null) {
             _MOVE_position = position;
             _MOVE_coords = getLocalCoordsFromPosition(position);
@@ -105,6 +106,7 @@ public class Utils : MonoBehaviour
         return false;
     }
     public static Vector3 moveTowards(Transform transform, String position) {
+        if(position is null || position.Length != 2) return transform.localPosition;
         if(_MOVE_position is null) {
             _MOVE_position = position;
             _MOVE_coords = getLocalCoordsFromPosition(position);
