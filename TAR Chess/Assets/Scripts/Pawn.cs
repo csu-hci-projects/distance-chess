@@ -5,16 +5,14 @@ using UnityEngine;
 public class Pawn : MonoBehaviour {
     public Board board;
     public bool white, alive;
-    public string position;
+    public string position, movePosition;
     public string[] possibleMoves;
     public List<string> pins;
 
     void Start() {
         possibleMoves = new string[4];
         pins = new List<string>();
-        float init_x = (float) Utils.file(position);
-        float init_z = (float) Utils.rank(position);
-        transform.localPosition = new Vector3(init_x, 0, init_z);
+        transform.localPosition = Utils.getLocalCoordsFromPosition(position);
         board.put((white? "w":"b") + "p", position);
         updatePossibleMoves();
         board.addAttacker(white, possibleMoves[2]);
@@ -29,6 +27,15 @@ public class Pawn : MonoBehaviour {
                 else pins.Add(pin.Substring(0,2));
             }
             updatePossibleMoves();
+        }
+        if(!(movePosition is null) && movePosition.Length > 0) {
+            if(Utils.pieceAt(transform, movePosition)) {
+                board.movePiece(position, movePosition);
+                position = movePosition;
+                transform.localPosition = Utils.getLocalCoordsFromPosition(position);
+                movePosition = null;
+            }
+            transform.localPosition = Utils.moveTowards(transform, movePosition);
         }
     }
 
