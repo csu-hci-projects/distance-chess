@@ -6,9 +6,11 @@ using UnityEngine;
 public class Utils : MonoBehaviour
 {
     public static int numPiecesUpdated = 0;
+    public static float moveSpeed = 10f;
     public static List<string> pins;
     public const string FILE = "ABCDEFGH";
     public const string RANK = "12345678";
+    public static Vector3 NULL_COORDS = new Vector3(-1,-1,-1);
     public static Dictionary<bool, string> kingPosition = new Dictionary<bool, string>();
 
     public static string position(int file, int rank) {
@@ -85,4 +87,34 @@ public class Utils : MonoBehaviour
         }
         return positions;
     }
+
+    public static Vector3 getLocalCoordsFromPosition(String position) {
+        if(position is null || position.Length != 2) return NULL_COORDS;
+        float f=file(position), r=rank(position);
+        return new Vector3(f, 0, r);
+    }
+    public static bool pieceAt(Transform transform, String position) {
+        if(_MOVE_position is null) {
+            _MOVE_position = position;
+            _MOVE_coords = getLocalCoordsFromPosition(position);
+        }
+        if(Vector3.Distance(transform.localPosition, _MOVE_coords) < 0.001f) {
+            _MOVE_position = null;
+            return true;
+        }
+        return false;
+    }
+    public static Vector3 moveTowards(Transform transform, String position) {
+        if(_MOVE_position is null) {
+            _MOVE_position = position;
+            _MOVE_coords = getLocalCoordsFromPosition(position);
+        }
+        return Vector3.MoveTowards(
+            transform.localPosition,
+            _MOVE_coords,
+            moveSpeed * Time.deltaTime
+        );
+    }
+        private static String _MOVE_position = null;
+        private static Vector3 _MOVE_coords;
 }
