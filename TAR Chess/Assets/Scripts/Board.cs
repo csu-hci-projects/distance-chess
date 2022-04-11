@@ -73,18 +73,19 @@ public class Board : MonoBehaviour {
         return false;
     }
     public void addAttacker(bool white, string position) {
-        if(position is null) return;
+        // check for valid position
+        if(position is null || position.Length != 2) return;
+
         int file=Utils.file(position), rank=Utils.rank(position);
-        if(attackersOf[file,rank] is null) {
-            attackersOf[file,rank] = white? "w1b0" : "w0b1";
-            return;
-        }
-        char num = attackersOf[file,rank][white? 1:3];
-        // a maximum of 9 pieces can attack a square at once,
-        // save some extreme exceptions which are extremely unlikely
-        if(num == '9') return;
-        num++;
-        attackersOf[file,rank] = updatedAttackers(attackersOf[file,rank], white, num);
+        
+        if(attackersOf[file,rank] is null)
+            attackersOf[file,rank] = "";
+        
+        // check for adding duplicate attacker
+        if(attackersOf[file,rank].Contains(position)) return;
+        
+        // otherwise append attacking color & tile
+        attackersOf[file,rank] += new string((white? 'w':'b'),1) + position;
     }
     public void removeAttacker(bool white, string position) {
         if(position is null) return;
