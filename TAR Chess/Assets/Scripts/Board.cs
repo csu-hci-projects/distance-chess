@@ -6,9 +6,12 @@ public class Board : MonoBehaviour {
     public string[,] position = new string[8,8];
     public string[,] attackersOf = new string[8,8];
     public Dictionary<bool, string> kingPosition;
+    public string check = "";
     public List<string> pins;
     void Start() {
         kingPosition = new Dictionary<bool, string>();
+        kingPosition.Add(true, "E1");
+        kingPosition.Add(false, "E8");
         pins = new List<string>();
     }
 
@@ -101,7 +104,12 @@ public class Board : MonoBehaviour {
         if(attackersOf[file,rank].Contains(attackingPosition)) return;
         
         // otherwise append attacking color & tile
-        attackersOf[file,rank] += new string((white? 'w':'b'),1) + attackingPosition;
+        attackersOf[file,rank] += (white? "w":"b") + attackingPosition;
+
+        if(kingPosition is null) return;
+        string otherKing = kingPosition[!white];
+        if(!(otherKing is null) && otherKing.Equals(attackedPosition))
+            check = (!white? "w":"b") + attackingPosition;
     }
     public void removeAttacker(string attackedPosition, string attackingPosition) {
         // check for valid positions
