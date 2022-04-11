@@ -3136,6 +3136,11 @@ PrefabInstance:
       propertyPath: position
       value: E2
       objectReference: {fileID: 0}
+    - target: {fileID: 6349358394199876680, guid: d08590e82a1f3544aadb3cbc7ceb43e8,
+        type: 3}
+      propertyPath: movePosition
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d08590e82a1f3544aadb3cbc7ceb43e8, type: 3}
 --- !u!1 &2000139663
@@ -3359,7 +3364,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7534aa3fef31a0b4f8b1e62fd44a0fbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  check: 
   pins: []
+--- !u!114 &2078483189
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2078483187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 409f1a7b58fbae645af95511db43165f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &4101711575074404 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6346664437118160883, guid: d08590e82a1f3544aadb3cbc7ceb43e8,
