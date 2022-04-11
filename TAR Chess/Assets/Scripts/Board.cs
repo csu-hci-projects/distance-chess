@@ -61,11 +61,16 @@ public class Board : MonoBehaviour {
     }
 
     public bool attackingPosition(bool attackerIsWhite, string position) {
-        string attackers = attackersOf[Utils.file(position), Utils.rank(position)];
-        if(attackers is null) return false;
-        return attackers[
-            attackerIsWhite? 1:3
-        ] != '0';
+        int file=Utils.file(position), rank=Utils.rank(position);
+        char color = attackerIsWhite? 'w':'b';
+        string attackers = attackersOf[file,rank];
+        if(attackers is null) attackersOf[file,rank] = "";
+        for(int atkPce=0; atkPce < attackers.Length / 3; ++atkPce) {
+            if(attackers[atkPce*3] == color)
+                return true;
+            else continue;
+        }
+        return false;
     }
     public void addAttacker(bool white, string position) {
         if(position is null) return;
