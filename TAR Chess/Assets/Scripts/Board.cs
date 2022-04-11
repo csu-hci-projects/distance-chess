@@ -52,10 +52,10 @@ public class Board : MonoBehaviour {
             return false;
         if(moverType == 'p') {
             int forward = moverWhite? 1:-1;
-            removeAttacker(moverWhite, Utils.positionFrom(fromPosition,-1,forward));
-            removeAttacker(moverWhite, Utils.positionFrom(fromPosition,1,forward));
-            addAttacker(moverWhite, Utils.positionFrom(toPosition,-1,forward));
-            addAttacker(moverWhite, Utils.positionFrom(toPosition,1,forward));
+            removeAttacker(Utils.positionFrom(fromPosition,-1,forward), fromPosition);
+            removeAttacker(Utils.positionFrom(fromPosition,1,forward), fromPosition);
+            addAttacker(moverWhite, Utils.positionFrom(toPosition,-1,forward), toPosition);
+            addAttacker(moverWhite, Utils.positionFrom(toPosition,1,forward), toPosition);
         }
         return true;
     }
@@ -72,34 +72,38 @@ public class Board : MonoBehaviour {
         }
         return false;
     }
-    public void addAttacker(bool white, string position) {
-        // check for valid position
-        if(position is null || position.Length != 2) return;
+    public void addAttacker(bool white, string attackedPosition, string attackingPosition) {
+        // check for valid positions
+        if (
+            attackedPosition is null || attackedPosition.Length != 2 ||
+            attackingPosition is null || attackingPosition.Length != 2
+        ) return;
 
-        int file=Utils.file(position), rank=Utils.rank(position);
+        int file=Utils.file(attackedPosition), rank=Utils.rank(attackedPosition);
         
         if(attackersOf[file,rank] is null)
             attackersOf[file,rank] = "";
         
         // check for adding duplicate attacker
-        if(attackersOf[file,rank].Contains(position)) return;
+        if(attackersOf[file,rank].Contains(attackingPosition)) return;
         
         // otherwise append attacking color & tile
-        attackersOf[file,rank] += new string((white? 'w':'b'),1) + position;
+        attackersOf[file,rank] += new string((white? 'w':'b'),1) + attackingPosition;
     }
-    public void removeAttacker(bool white, string position) {
-        if(position is null) return;
-        int file=Utils.file(position), rank=Utils.rank(position);
-        string attackers = attackersOf[file,rank];
-        if(attackers is null) {
-            attackersOf[file,rank] = "w0b0";
-            return;
-        }
+    public void removeAttacker(string attackedPosition, string attackingPosition) {
+        // check for valid positions
+        if (
+            attackedPosition is null || attackedPosition.Length != 2 ||
+            attackingPosition is null || attackingPosition.Length != 2
+        ) return;
 
-        char num = attackers[white? 1:3];
-        if(num == '0') return;
-        else num--;
-        attackersOf[file,rank] = updatedAttackers(attackers, white, num);
+        int file=Utils.file(attackedPosition), rank=Utils.rank(attackedPosition);
+
+        if(attackersOf[file,rank] is null)
+            attackersOf[file,rank] = "";
+        
+        attackersOf[file,rank] = attackersOf[file,rank].Replace("w"+attackingPosition, "");
+        attackersOf[file,rank] = attackersOf[file,rank].Replace("b"+attackingPosition, "");
     }
     private string updatedAttackers(string attackers, bool white, char num) {
         return white?
