@@ -17,7 +17,7 @@ public class Utils : MonoBehaviour
         if(file < 0 || file > 7 || rank < 0 || rank > 7) return null;
         return FILE.Substring(file,1) + RANK.Substring(rank,1);
     }
-    public static int file(string position) { return FILE.IndexOf(position[0]); }
+    public static int file(string position) { return FILE.IndexOf(Char.ToUpper(position[0])); }
     public static int rank(string position) { return RANK.IndexOf(position[1]); }
 
     public static string positionFrom(string position, int fileDistance, int rankDistance) {
