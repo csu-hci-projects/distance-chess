@@ -51,14 +51,27 @@ public class Board : MonoBehaviour {
         if(moverType == 'k' && attackingPosition(!moverWhite, toPosition))
             return false;
         if(moverType == 'p') {
-            int forward = moverWhite? 1:-1;
-            removeAttacker(Utils.positionFrom(fromPosition,-1,forward), fromPosition);
-            removeAttacker(Utils.positionFrom(fromPosition,1,forward), fromPosition);
-            addAttacker(moverWhite, Utils.positionFrom(toPosition,-1,forward), toPosition);
-            addAttacker(moverWhite, Utils.positionFrom(toPosition,1,forward), toPosition);
+            removePawnAttacksFromTile(moverWhite, fromPosition);
+            addPawnAttacksFromTile(moverWhite, toPosition);
         }
         return true;
     }
+        public void addPawnAttacksFromTile(bool white, string position) {
+            int forward = white? 1:-1;
+            string
+                left = Utils.positionFrom(position,-1,forward),
+                right = Utils.positionFrom(position,1,forward);
+            addAttacker(white, left, position);
+            addAttacker(white, right, position);
+        }
+        public void removePawnAttacksFromTile(bool white, string position) {
+            int forward = white? 1:-1;
+            string
+                left = Utils.positionFrom(position,-1,forward),
+                right = Utils.positionFrom(position,1,forward);
+            removeAttacker(left, position);
+            removeAttacker(right, position);
+        }
 
     public bool attackingPosition(bool attackerIsWhite, string position) {
         int file=Utils.file(position), rank=Utils.rank(position);
@@ -104,11 +117,5 @@ public class Board : MonoBehaviour {
         
         attackersOf[file,rank] = attackersOf[file,rank].Replace("w"+attackingPosition, "");
         attackersOf[file,rank] = attackersOf[file,rank].Replace("b"+attackingPosition, "");
-    }
-    private string updatedAttackers(string attackers, bool white, char num) {
-        return white?
-            "w" + new string(num,1) + attackers.Substring(2) :
-            attackers.Substring(0,2) + "b" + new string(num,1)
-        ;
     }
 }
