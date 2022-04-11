@@ -18,7 +18,7 @@ This will primarily be built for iOS, but future builds could include Android.
   - [ ] only renders opponents' pieces (in progress)
   - [ ] occlusion
 - [ ] Piece move scripting
-  - [x] animations (in progress)
+  - [x] animations
   - [x] pawns
   - [ ] kings
   - [ ] rooks
