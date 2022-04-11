@@ -30,7 +30,7 @@ public class Pawn : MonoBehaviour {
         if(!(movePosition is null) && movePosition.Length > 0) {
             if(Utils.pieceAt(transform, movePosition)) {
                 board.movePiece(position, movePosition);
-                position = movePosition;
+                position = Utils.position(Utils.file(movePosition),Utils.rank(movePosition));
                 transform.localPosition = Utils.getLocalCoordsFromPosition(position);
                 movePosition = null;
             }

@@ -6,7 +6,7 @@ using UnityEngine;
 public class Utils : MonoBehaviour
 {
     public static int numPiecesUpdated = 0;
-    public static float moveSpeed = 10f;
+    public static float moveTime = 0.1f;
     public static List<string> pins;
     public const string FILE = "ABCDEFGH";
     public const string RANK = "12345678";
@@ -101,22 +101,28 @@ public class Utils : MonoBehaviour
         }
         if(Vector3.Distance(transform.localPosition, _MOVE_coords) < 0.001f) {
             _MOVE_position = null;
+            _MOVE_speed = -1f;
             return true;
         }
         return false;
     }
     public static Vector3 moveTowards(Transform transform, String position) {
         if(position is null || position.Length != 2) return transform.localPosition;
-        if(_MOVE_position is null) {
+        if(_MOVE_position is null || _MOVE_position.Length == 0) {
             _MOVE_position = position;
             _MOVE_coords = getLocalCoordsFromPosition(position);
+        }
+        if(_MOVE_speed == -1f) {
+            _MOVE_speed = Vector3.Distance(transform.localPosition, _MOVE_coords) / moveTime;
+            Debug.Log("New move speed: "+_MOVE_speed);
         }
         return Vector3.MoveTowards(
             transform.localPosition,
             _MOVE_coords,
-            moveSpeed * Time.deltaTime
+            _MOVE_speed * Time.deltaTime
         );
     }
         private static String _MOVE_position = null;
         private static Vector3 _MOVE_coords;
+        private static float _MOVE_speed = -1f;
 }
