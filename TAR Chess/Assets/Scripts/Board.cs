@@ -162,4 +162,17 @@ public class Board : MonoBehaviour {
         attackersOf[file,rank] = attackersOf[file,rank].Replace("w"+attackingPosition, "");
         attackersOf[file,rank] = attackersOf[file,rank].Replace("b"+attackingPosition, "");
     }
+    public bool isAttackedBy(bool white, string position) {
+        if(!Utils.validPosition(position))
+            return false;
+        string attackers = attackersOf[
+            Utils.file(position), Utils.rank(position)
+        ];
+        for(int piece=0; piece < attackers.Length / 3; ++piece) {
+            char color = attackers[piece * 3];
+            if(color == (white? 'w':'b'))
+                return true;
+        }
+        return false;
+    }
 }
