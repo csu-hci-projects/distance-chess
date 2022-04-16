@@ -117,6 +117,7 @@ public class Board : MonoBehaviour {
         // otherwise append attacking color & tile
         attackersOf[file,rank] += (white? "w":"b") + attackingPosition;
 
+        // now check to see if attacked tile has the other color's king
         if(kingPosition is null) return;
         string otherKing = kingPosition[!white];
         if(!(otherKing is null) && otherKing.Equals(attackedPosition))
