@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Board : MonoBehaviour {
-    public string[,] position = new string[8,8];
+    public string[,] boardPosition = new string[8,8];
     public string[,] attackersOf = new string[8,8];
     public Dictionary<bool, string> kingPosition;
     public string check = "";
@@ -20,21 +20,28 @@ public class Board : MonoBehaviour {
         
     }
 
+    // returns piece information of the piece located at `position`
     public string pieceAt(string position) {
-        return pieceAt(Utils.file(position),Utils.rank(position));
-    }
-    public string pieceAt(int file, int rank) {
-        if(file < 0 || file > 7 || rank < 0 || rank > 7) return null;
-        else return position[file,rank];
+        if(!Utils.validPosition(position))
+            return null;
+        
+        return boardPosition[Utils.file(position), Utils.rank(position)];
     }
 
-    public void put(string value, string position) {
-        put(value,Utils.file(position),Utils.rank(position));
-        if(value[1] == 'k') kingPosition[value[0] == 'w'] = position;
-    }
-    public void put(string value, int file, int rank) {
-        if(file < 0 || file > 7 || rank < 0 || rank > 7) return;
-        position[file,rank] = value;
+    // puts piece information `value` at `position`
+    public bool put(string value, string position) {
+        if(!Utils.validPosition(position))
+            return false;
+        
+        if(!(value is null || value.Length == 0)) {
+            if(value[1] == 'k') // if the piece is a king, update the king position
+                kingPosition[value[0] == 'w'] = position;
+        } else if(!Utils.validPiece(value))
+            return false;
+
+        boardPosition[Utils.file(position), Utils.rank(position)] = value;
+        
+        return true;
     }
 
     // used for pins primarily; TODO for non-king-pawn scripting
@@ -43,7 +50,8 @@ public class Board : MonoBehaviour {
     }
 
     public bool movePiece(string fromPosition, string toPosition) {
-        if(fromPosition is null) return false;
+        if(!Utils.validPosition(fromPosition) || !Utils.validPosition(toPosition))    
+            return false;
         string movingPiece = pieceAt(fromPosition);
         if(movingPiece is null) return false;
         if(toPosition is null) return false;
@@ -54,12 +62,15 @@ public class Board : MonoBehaviour {
         if(moverType == 'k' && attackingPosition(!moverWhite, toPosition))
             return false;
         if(moverType == 'p') {
-            removePawnAttacksFromTile(moverWhite, fromPosition);
-            addPawnAttacksFromTile(moverWhite, toPosition);
+            add_pawnAttacksFromTile(moverWhite, toPosition);
+            remove_pawnAttacksFromTile(moverWhite, fromPosition);
         }
+
+        put("", fromPosition);
+        put(movingPiece, toPosition);
         return true;
     }
-        public void addPawnAttacksFromTile(bool white, string position) {
+        public void add_pawnAttacksFromTile(bool white, string position) {
             int forward = white? 1:-1;
             string
                 left = Utils.positionFrom(position,-1,forward),
@@ -67,7 +78,7 @@ public class Board : MonoBehaviour {
             addAttacker(white, left, position);
             addAttacker(white, right, position);
         }
-        public void removePawnAttacksFromTile(bool white, string position) {
+        public void remove_pawnAttacksFromTile(bool white, string position) {
             int forward = white? 1:-1;
             string
                 left = Utils.positionFrom(position,-1,forward),
@@ -77,6 +88,8 @@ public class Board : MonoBehaviour {
         }
 
     public bool attackingPosition(bool attackerIsWhite, string position) {
+        if(!Utils.validPosition(position))
+            return false;
         int file=Utils.file(position), rank=Utils.rank(position);
         char color = attackerIsWhite? 'w':'b';
         string attackers = attackersOf[file,rank];
@@ -90,10 +103,8 @@ public class Board : MonoBehaviour {
     }
     public void addAttacker(bool white, string attackedPosition, string attackingPosition) {
         // check for valid positions
-        if (
-            attackedPosition is null || attackedPosition.Length != 2 ||
-            attackingPosition is null || attackingPosition.Length != 2
-        ) return;
+        if (!Utils.validPosition(attackedPosition) || !Utils.validPosition(attackingPosition))
+            return;
 
         int file=Utils.file(attackedPosition), rank=Utils.rank(attackedPosition);
         
@@ -113,10 +124,8 @@ public class Board : MonoBehaviour {
     }
     public void removeAttacker(string attackedPosition, string attackingPosition) {
         // check for valid positions
-        if (
-            attackedPosition is null || attackedPosition.Length != 2 ||
-            attackingPosition is null || attackingPosition.Length != 2
-        ) return;
+        if (!Utils.validPosition(attackedPosition) || !Utils.validPosition(attackingPosition))
+            return;
 
         int file=Utils.file(attackedPosition), rank=Utils.rank(attackedPosition);
 

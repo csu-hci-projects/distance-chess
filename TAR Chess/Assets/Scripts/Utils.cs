@@ -17,6 +17,9 @@ public class Utils : MonoBehaviour
         if(file < 0 || file > 7 || rank < 0 || rank > 7) return null;
         return FILE.Substring(file,1) + RANK.Substring(rank,1);
     }
+    public static bool validPosition(string position) {
+        return !(position is null) && position.Length == 2 && file(position) != -1 && rank(position) != -1;
+    }
     public static int file(string position) { return FILE.IndexOf(Char.ToUpper(position[0])); }
     public static int rank(string position) { return RANK.IndexOf(position[1]); }
 
@@ -24,6 +27,29 @@ public class Utils : MonoBehaviour
         int file = Utils.file(position), rank = Utils.rank(position);
         file += fileDistance; rank += rankDistance;
         return Utils.position(file, rank);
+    }
+
+    public static string piece(bool white, char type) {
+        return (white? "w":"b") + type;
+    }
+    public static bool validPiece(string piece) {
+        if(piece is null || piece.Length != 2)
+            return false;
+        if(!"wb".Contains("" + piece[0]))
+            return false;
+        if(!"pkqrnb".Contains("" + piece[1]))
+            return false;
+
+        return true;
+    }
+    public static char pieceType(string piece) {
+        return piece[1];
+    }
+    public static char pieceColor(string piece) {
+        return piece[0];
+    }
+    public static bool pieceIsWhite(string piece) {
+        return pieceColor(piece) == 'w';
     }
 
     public static void pinPosition(string pinningPosition, string pinnedPosition) {
@@ -114,7 +140,6 @@ public class Utils : MonoBehaviour
         }
         if(_MOVE_speed == -1f) {
             _MOVE_speed = Vector3.Distance(transform.localPosition, _MOVE_coords) / moveTime;
-            Debug.Log("New move speed: "+_MOVE_speed);
         }
         return Vector3.MoveTowards(
             transform.localPosition,
@@ -125,4 +150,11 @@ public class Utils : MonoBehaviour
         private static String _MOVE_position = null;
         private static Vector3 _MOVE_coords;
         private static float _MOVE_speed = -1f;
+    
+    public static string getPawnAttackPosition(bool left, bool white, string position) {
+        if(!validPosition(position))
+            return null;
+        int forward = white? 1:-1, side = left? -1:1;
+        return positionFrom(position, side, forward);
+    }
 }
