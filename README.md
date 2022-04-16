@@ -16,7 +16,7 @@ This will primarily be built for iOS, but future builds could include Android.
 - [ ] Rendering of pieces
   - [x] basic piece and board rendering
   - [ ] only renders opponents' pieces (in progress)
-  - [ ] occlusion
+  - [ ] occlusion (may not be implemented)
 - [ ] Piece move scripting
   - [x] animations
   - [x] pawns
@@ -34,7 +34,7 @@ This will primarily be built for iOS, but future builds could include Android.
   - [ ] captures (in progress)
   - [ ] en passant captures
   - [ ] pawn promotions
-- [ ] Computer Vision
+- [ ] Computer Vision (may not be implemented)
   - [ ] recognizes pieces
   - [ ] recognizes moves
   - [ ] checks for captures on player's pieces
