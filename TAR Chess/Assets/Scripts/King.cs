@@ -5,7 +5,7 @@ using UnityEngine;
 public class King : MonoBehaviour {
     public Board board;
     public bool white;
-    public string position;
+    public string position=null, movePosition=null;
     public string[] possibleMoves = new string[10];
     public bool firstMove = true, kingsRookMoved = false, queensRookMoved = false;
     public bool isInCheck = false;
@@ -20,6 +20,8 @@ public class King : MonoBehaviour {
             isInCheck = board.check.Contains(white? "w":"b");
             updatePossibleMoves();
         }
+        
+        Utils.updateMove(board, transform, position, movePosition);
     }
 
     public void updatePossibleMoves() {

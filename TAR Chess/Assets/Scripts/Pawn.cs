@@ -31,21 +31,7 @@ public class Pawn : MonoBehaviour {
             // update the pawn's moveset
             updatePossibleMoves();
         }
-        // check for a move position
-        if(Utils.validPosition(movePosition)) {
-            // if the piece has completed its move animation
-            if(Utils.pieceAt(transform, movePosition)) {
-                // update the board position
-                board.movePiece(position, movePosition);
-                // update local position
-                position = Utils.position(Utils.file(movePosition),Utils.rank(movePosition));
-                transform.localPosition = Utils.getLocalCoordsFromPosition(position);
-                // reset move position
-                movePosition = null;
-            }
-            // otherwise, move towards the new position
-            transform.localPosition = Utils.moveTowards(transform, movePosition);
-        }
+        Utils.updateMove(board, transform, position, movePosition);
     }
 
     // simple method to get position from a forward move
