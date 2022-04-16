@@ -14,6 +14,7 @@ public class Board : MonoBehaviour {
         kingPosition.Add(true, "E1");
         kingPosition.Add(false, "E8");
         pins = new List<string>();
+        signalUpdatesFromMove();
     }
 
     // Update is called once per frame
@@ -37,8 +38,7 @@ public class Board : MonoBehaviour {
         if(!(value is null || value.Length == 0)) {
             if(value[1] == 'k') // if the piece is a king, update the king position
                 kingPosition[value[0] == 'w'] = position;
-        } else if(!Utils.validPiece(value))
-            return false;
+        }
 
         boardPosition[Utils.file(position), Utils.rank(position)] = value;
         
@@ -61,7 +61,7 @@ public class Board : MonoBehaviour {
         else
             tilesToUpdate[Utils.file(position), Utils.rank(position)] = true;
     }
-    public void signalUpdatesFromMove(string fromPosition, string toPosition) {
+    public void signalUpdatesFromMove(string fromPosition ="", string toPosition ="") {
         // trivial method of updating pieces: force every piece to update
         // not very efficient, may want replacing
         for(int file=0; file<8; ++file) {
@@ -92,7 +92,7 @@ public class Board : MonoBehaviour {
         // find which pieces need updates because of this move
         signalUpdatesFromMove(fromPosition, toPosition);
 
-        put("", fromPosition);
+        put(null, fromPosition);
         put(movingPiece, toPosition);
         return true;
     }
