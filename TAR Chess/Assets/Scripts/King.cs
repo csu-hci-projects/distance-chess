@@ -83,11 +83,26 @@ public class King : MonoBehaviour {
             possibleMoves[9] = null;
     }
     private bool canCastle(bool kingside) {
+        // king cannot castle while in check
+        if(isInCheck)
+            return false;
+
         // first check checks: king cannot castle across or into check
         if(board.isAttackedBy(!white, Utils.positionFrom(position, kingside? 1:-1, 0)))
             return false;
         if(board.isAttackedBy(!white, Utils.positionFrom(position, kingside? 2:-2, 0)))
             return false;
+        
+        // now check to make sure all squares between king and rook are empty
+        int numToCheck = kingside? 2:3;
+        for(int f=0; f<numToCheck; ++f) {
+            int diff = (1 + f) * (kingside? 1:-1);
+            string piece = board.pieceAt(Utils.positionFrom(position, diff, 0));
+            if(piece is null)
+                continue;
+            else
+                return false;
+        }
         return true;
     }
 }
