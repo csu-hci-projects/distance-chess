@@ -168,6 +168,9 @@ public class Board : MonoBehaviour {
         string attackers = attackersOf[
             Utils.file(position), Utils.rank(position)
         ];
+        if(attackers is null)
+            return false;
+
         for(int piece=0; piece < attackers.Length / 3; ++piece) {
             char color = attackers[piece * 3];
             if(color == (white? 'w':'b'))
