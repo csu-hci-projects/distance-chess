@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Board : MonoBehaviour {
     public string[,] boardPosition = new string[8,8];
+    public bool[,] tilesToUpdate = new bool[8,8];
     public string[,] attackersOf = new string[8,8];
     public Dictionary<bool, string> kingPosition;
     public string check = "";
@@ -46,9 +47,31 @@ public class Board : MonoBehaviour {
 
     // used for pins primarily; TODO for non-king-pawn scripting
     public bool needsUpdate(string position) {
-        return false;
+        int file = Utils.file(position), rank = Utils.rank(position);
+        if(tilesToUpdate[file, rank]) {
+            tilesToUpdate[file, rank] = false;
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public void signalForUpdate(string position) {
+        if(!Utils.validPosition(position))
+            return;
+        else
+            tilesToUpdate[Utils.file(position), Utils.rank(position)] = true;
+    }
+    public void signalUpdatesFromMove(string fromPosition, string toPosition) {
+        // trivial method of updating pieces: force every piece to update
+        // not very efficient, may want replacing
+        for(int file=0; file<8; ++file) {
+            for(int rank=0; rank<8; ++rank) {
+                signalForUpdate(Utils.position(file,rank));
+            }
+        }
     }
 
+    // returns true iff move is legal, and thus updated the board data
     public bool movePiece(string fromPosition, string toPosition) {
         if(!Utils.validPosition(fromPosition) || !Utils.validPosition(toPosition))    
             return false;
@@ -65,6 +88,9 @@ public class Board : MonoBehaviour {
             add_pawnAttacksFromTile(moverWhite, toPosition);
             remove_pawnAttacksFromTile(moverWhite, fromPosition);
         }
+
+        // find which pieces need updates because of this move
+        signalUpdatesFromMove(fromPosition, toPosition);
 
         put("", fromPosition);
         put(movingPiece, toPosition);

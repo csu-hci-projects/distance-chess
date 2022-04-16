@@ -26,7 +26,7 @@ public class Pawn : MonoBehaviour {
                 if(!pin.Contains(position))
                     continue;
                 else // otherwise add it to the local list of pins (pawns cannot pin, guaranteed to be a pin *on* this piece)
-                    pins.Add(pin.Substring(0,2));
+                    pins.Add(pin.Substring(2,2));
             }
             // update the pawn's moveset
             updatePossibleMoves();
