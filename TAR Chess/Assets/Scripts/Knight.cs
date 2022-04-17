@@ -11,6 +11,7 @@ public class Knight : MonoBehaviour {
 
     void Start() {
         board.put(Utils.piece(white, 'k'), position);
+        updatePossibleMoves();
     }
 
     void Update() {
@@ -20,12 +21,14 @@ public class Knight : MonoBehaviour {
     }
 
     public void updatePossibleMoves() {
-        if(!(pin is null)) { // if the knight is pinned, there is no possible move for the knight
+        if(Utils.validPosition(pin)) { // if the knight is pinned, there is no possible move for the knight
             possibleMoves.Clear();
             return;
         }
 
         possibleMoves = Utils.getKnightAttacksFrom(position);
+        List<string> illegalMoves = new List<string>();
+
         foreach(string move in possibleMoves) {
             string piece = board.pieceAt(move);
             if(!Utils.validPiece(piece))
@@ -36,7 +39,11 @@ public class Knight : MonoBehaviour {
                 continue;
             // at this point, we know the position is occupied by a piece of the same color
             // so, it is an illegal move
-            possibleMoves.Remove(move);
+            illegalMoves.Add(move);
         }
+
+        // clear illegal moves from possible moves
+        foreach(string move in illegalMoves)
+            possibleMoves.Remove(move);
     }
 }
