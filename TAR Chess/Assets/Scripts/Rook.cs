@@ -9,11 +9,17 @@ public class Rook : MonoBehaviour {
     public List<string> possibleMoves = new List<string>();
 
     void Start() {
-        
+        board.put(Utils.piece(white, 'r'), position);
     }
 
     // Update is called once per frame
     void Update() {
-        
+        if(board.needsUpdate(position)) {
+            updatePossibleMoves();
+        }
+    }
+
+    void updatePossibleMoves() {
+
     }
 }
