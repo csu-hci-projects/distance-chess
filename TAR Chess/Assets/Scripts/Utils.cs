@@ -238,7 +238,7 @@ public class Utils : MonoBehaviour
                 // get the attack position for this direction, then check it
                 string attack = positionFrom(position, fd, rd);
                 string info = getAttackInfo(board, bishop, attack);
-                if(info is null) { // the move is illegal
+                if(info is null) { // the move position does not exist
                     shouldContinue[dir] = false;
                     --numDirs;
                 } else { // the attack exists, so we
@@ -253,6 +253,44 @@ public class Utils : MonoBehaviour
                 }
             }
         }
+        return attacks;
+    }
+    public static List<string> getRookAttacksFrom(Board board, bool white, string position) {
+        string rook = white? "w":"b" + "r";
+        List<string> attacks = new List<string>();
+
+        int file=Utils.file(position), rank=Utils.rank(position);
+        bool[] shouldContinue = new bool[4];
+        for(int i=0; i<4; ++i) shouldContinue[i] = true;
+        int numDirs=4;
+        for(int distance=1; numDirs>0; ++distance) {
+            // for each direction (left, up, right, down)
+            for(int dir=0; dir<4; ++dir) {
+                if(!shouldContinue[dir]) continue;
+                int
+                    fd = (dir % 2 == 0)? distance : 0,
+                    rd = (dir % 2 != 0)? distance : 0;
+                if(dir == 0) fd *= -1;
+                if(dir == 3) rd *= -1;
+
+                string attack = positionFrom(position, fd, rd);
+                string info = getAttackInfo(board, rook, attack);
+                if(info is null) { // the move position does not exist
+                    shouldContinue[dir] = false;
+                    --numDirs;
+                } else { // the attack exists, so we
+                    // add the position, then
+                    attacks.Add(attack);
+                    // designate whether to continue exploring the diagonal
+                    // - iff the square is empty, we should continue
+                    if(info[0] != 'E') {
+                        shouldContinue[dir] = false;
+                        --numDirs;
+                    }
+                }
+            }
+        }
+
         return attacks;
     }
 
