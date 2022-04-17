@@ -73,27 +73,39 @@ public class Board : MonoBehaviour {
         if(!Utils.validPosition(fromPosition) || !Utils.validPosition(toPosition))    
             return false;
         string movingPiece = pieceAt(fromPosition);
-        if(movingPiece is null) return false;
-        if(toPosition is null) return false;
+        if(!Utils.validPiece(movingPiece)) return false;
+        if(!Utils.validPosition(toPosition)) return false;
 
-        bool moverWhite = movingPiece[0] == 'w';
-        char moverType = movingPiece[1];
+        bool moverWhite = Utils.pieceIsWhite(movingPiece);
+        char moverType = Utils.pieceType(movingPiece);
 
         List<string> oldAttacks, newAttacks;
-        if(moverType == 'k') {
+        if(moverType == 'k') { // king
             if(attackingPosition(!moverWhite, toPosition))
                 return false;
 
             oldAttacks = Utils.getKingAttacksFrom(fromPosition);
             newAttacks = Utils.getKingAttacksFrom(toPosition);
         }
-        else if(moverType == 'p') {
-            oldAttacks = Utils.getPawnAttacksFrom(moverWhite, fromPosition);
-            newAttacks = Utils.getPawnAttacksFrom(moverWhite, toPosition);
-        }
-        else { // code will never reach this, but it resolves compiler errors
+        else if(moverType == 'q') { // queen
             oldAttacks = new List<string>();
             newAttacks = new List<string>();
+        }
+        else if(moverType == 'r') { // rook
+            oldAttacks = new List<string>();
+            newAttacks = new List<string>();
+        }
+        else if(moverType == 'n') { // knight
+            oldAttacks = new List<string>();
+            newAttacks = new List<string>();
+        }
+        else if(moverType == 'b') { // bishop
+            oldAttacks = new List<string>();
+            newAttacks = new List<string>();
+        }
+        else { // if(moverType == 'p') // pawn
+            oldAttacks = Utils.getPawnAttacksFrom(moverWhite, fromPosition);
+            newAttacks = Utils.getPawnAttacksFrom(moverWhite, toPosition);
         }
 
         foreach(string attack in oldAttacks)
