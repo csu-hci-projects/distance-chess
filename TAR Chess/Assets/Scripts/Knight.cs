@@ -18,7 +18,11 @@ public class Knight : MonoBehaviour {
         if(board.needsUpdate(position)) {
             updatePossibleMoves();
             pin = Utils.getPin(board.pins, pin);
-            
+        }
+        
+        if(Utils.updateMove(board, transform, position, movePosition)) {
+            position = Utils.position(Utils.file(movePosition), Utils.rank(movePosition));
+            movePosition = null;
         }
     }
 
