@@ -108,6 +108,7 @@ public class Board : MonoBehaviour {
             newAttacks = Utils.getPawnAttacksFrom(moverWhite, toPosition);
         }
 
+        // now we update the attacks on all affected positions
         foreach(string attack in oldAttacks)
             removeAttacker(attack, fromPosition);
         foreach(string attack in newAttacks)
