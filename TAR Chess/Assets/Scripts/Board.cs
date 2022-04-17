@@ -100,14 +100,15 @@ public class Board : MonoBehaviour {
             newAttacks = Utils.getKnightAttacksFrom(toPosition);
         }
         else if(moverType == 'b') { // bishop
-            oldAttacks = new List<string>();
-            newAttacks = new List<string>();
+            oldAttacks = Utils.getBishopAttacksFrom(this, moverWhite, fromPosition);
+            newAttacks = Utils.getBishopAttacksFrom(this, moverWhite, toPosition);
         }
         else { // if(moverType == 'p') // pawn
             oldAttacks = Utils.getPawnAttacksFrom(moverWhite, fromPosition);
             newAttacks = Utils.getPawnAttacksFrom(moverWhite, toPosition);
         }
 
+        // now we update the attacks on all affected positions
         foreach(string attack in oldAttacks)
             removeAttacker(attack, fromPosition);
         foreach(string attack in newAttacks)
