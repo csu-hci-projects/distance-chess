@@ -25,12 +25,13 @@ This will primarily be built for iOS, but future builds could include Android.
   - [x] knights
   - [x] bishops
   - [ ] queens (in progress)
-- [ ] Board scripting
+- [ ] `Board` scripting
   - [x] piece positions
   - [ ] attacks on tiles (in progress, missing queen attacks)
   - [ ] checks & checkmates (in progress)
   - [ ] stalemates
   - [ ] pins on pieces
+  - [x] castling
   - [ ] captures (in progress)
   - [ ] en passant captures
   - [ ] pawn promotions
