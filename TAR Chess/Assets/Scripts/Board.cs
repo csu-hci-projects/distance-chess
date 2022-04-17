@@ -100,8 +100,8 @@ public class Board : MonoBehaviour {
             newAttacks = Utils.getKnightAttacksFrom(toPosition);
         }
         else if(moverType == 'b') { // bishop
-            oldAttacks = new List<string>();
-            newAttacks = new List<string>();
+            oldAttacks = Utils.getBishopAttacksFrom(this, moverWhite, fromPosition);
+            newAttacks = Utils.getBishopAttacksFrom(this, moverWhite, toPosition);
         }
         else { // if(moverType == 'p') // pawn
             oldAttacks = Utils.getPawnAttacksFrom(moverWhite, fromPosition);
