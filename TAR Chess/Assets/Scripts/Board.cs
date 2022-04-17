@@ -59,7 +59,7 @@ public class Board : MonoBehaviour {
             tilesToUpdate[Utils.file(position), Utils.rank(position)] = true;
     }
     public void signalUpdatesFromMove(string fromPosition ="", string toPosition ="") {
-        // trivial method of updating pieces: force every piece to update
+        // trivial solution to updating pieces: force every piece to update
         // not very efficient, may want replacing
         for(int file=0; file<8; ++file) {
             for(int rank=0; rank<8; ++rank) {
@@ -140,7 +140,7 @@ public class Board : MonoBehaviour {
         attackersOf[file,rank] += (white? "w":"b") + attackingPosition;
 
         // now check to see if attacked tile has the other color's king
-        if(kingPosition is null) return;
+        if(!kingPosition.ContainsKey(!white)) return;
         string otherKing = kingPosition[!white];
         if(!(otherKing is null) && otherKing.Equals(attackedPosition))
             check = (!white? "w":"b") + attackingPosition;
