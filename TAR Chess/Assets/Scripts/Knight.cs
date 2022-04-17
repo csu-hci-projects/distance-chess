@@ -10,8 +10,11 @@ public class Knight : MonoBehaviour {
     public bool white;
 
     void Start() {
-        board.put(Utils.piece(white, 'k'), position);
+        board.put(Utils.piece(white, 'n'), position);
         updatePossibleMoves();
+        foreach(string attack in Utils.getKnightAttacksFrom(position)) {
+            board.addAttacker(white, attack, position);
+        }
     }
 
     void Update() {
