@@ -17,6 +17,8 @@ public class Knight : MonoBehaviour {
     void Update() {
         if(board.needsUpdate(position)) {
             updatePossibleMoves();
+            pin = Utils.getPin(board.pins, pin);
+            
         }
     }
 

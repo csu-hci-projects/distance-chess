@@ -217,4 +217,14 @@ public class Utils : MonoBehaviour
         }
         return attacks;
     }
+
+    public static string getPin(List<string> pins, string position) {
+        if(!validPosition(position))
+            return null;
+        foreach(string pin in pins) {
+            if(pin.Contains(position))
+                return pin.Substring(0,2);
+        }
+        return null;
+    }
 }

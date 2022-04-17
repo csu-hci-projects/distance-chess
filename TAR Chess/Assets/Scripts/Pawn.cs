@@ -21,16 +21,7 @@ public class Pawn : MonoBehaviour {
 
     void Update() {
         if(board.needsUpdate(position)) {
-            pin = null;
-            foreach(string pin in board.pins) {
-                // if the pin has nothing to do with this piece, skip it
-                if(!pin.Contains(position))
-                    continue;
-                else { // otherwise set the pin position to the attacker's position
-                    this.pin = pin.Substring(2,2);
-                    break;
-                }
-            }
+            pin = Utils.getPin(board.pins, position);
             // update the pawn's moveset
             updatePossibleMoves();
         }
