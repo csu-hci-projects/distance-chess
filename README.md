@@ -3,6 +3,29 @@
 - Andreas Johnson
 - Isaac Mount
 
+# Instructions for Running Application
+First, you will need to install [Unity](https://unity.com/).
+Guides for this can be found on their website, as well as in various locations online.
+
+Next, clone this repo into a convenient location on your PC.
+Ensure that all required additional packages and modules are installed for Unity, including Android/iOS build support (depending on the device you wish to use) and the following packages:
+- AR Foundation
+- ARCore XR Plugin (for iOS)
+- ARKit XR Plugin (for Android)
+
+The AR rendering has not been tested on mobile devices, yet, and may not function as expected.
+To test the project without AR, simply open the project in Unity, then click the "play" button.
+To move pieces, select the piece to move from the scene hierarchy panel (left panel by default).
+Then, using the inspector (right panel by default), you can view the current details of the piece, as well as manually enter a move for the piece.
+
+For example, selecting `Board/WhitePieces/Pawns/E`, you could enter `e4` in the inspector panel for the field `Move Position`.
+Then, the move will be rendered in the game window.
+Note that currently, move captures are not supported, nor are the positions entered in `Move Position` checked for *legality* (though they are checked to ensure the position exists on the board).
+
+In the inspector panel, you can also view the `Possible Moves` field, which lists the *legal* moves for each piece.
+This is not yet implemented for the queen piece, and does not include some special rules such as taking En Passant.
+Pins have limited support, but currently do not update accurately.
+
 # Project Overview
 The goal of this project is to explore how interfaces can affect users' cognitive performance.
 Chess offers an ideal task for testing this, being widely available in many interfaces.
