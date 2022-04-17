@@ -198,6 +198,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 941240474}
     m_Modifications:
+    - target: {fileID: -9024452402761313129, guid: 56902b3aa76d64d758516d63a16b2014,
+        type: 3}
+      propertyPath: board
+      value: 
+      objectReference: {fileID: 2078483188}
+    - target: {fileID: -9024452402761313129, guid: 56902b3aa76d64d758516d63a16b2014,
+        type: 3}
+      propertyPath: position
+      value: A8
+      objectReference: {fileID: 0}
     - target: {fileID: 7410320487004687762, guid: 56902b3aa76d64d758516d63a16b2014,
         type: 3}
       propertyPath: m_Name
@@ -2866,6 +2876,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2062961177}
     m_Modifications:
+    - target: {fileID: 6339815992645523349, guid: 29072c58f78a447e09e9ca55596cf76f,
+        type: 3}
+      propertyPath: board
+      value: 
+      objectReference: {fileID: 2078483188}
+    - target: {fileID: 6339815992645523349, guid: 29072c58f78a447e09e9ca55596cf76f,
+        type: 3}
+      propertyPath: position
+      value: H1
+      objectReference: {fileID: 0}
     - target: {fileID: 7410320487004687762, guid: 29072c58f78a447e09e9ca55596cf76f,
         type: 3}
       propertyPath: m_Name
@@ -3008,6 +3028,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 941240474}
     m_Modifications:
+    - target: {fileID: -9024452402761313129, guid: 56902b3aa76d64d758516d63a16b2014,
+        type: 3}
+      propertyPath: board
+      value: 
+      objectReference: {fileID: 2078483188}
+    - target: {fileID: -9024452402761313129, guid: 56902b3aa76d64d758516d63a16b2014,
+        type: 3}
+      propertyPath: position
+      value: H8
+      objectReference: {fileID: 0}
     - target: {fileID: 7410320487004687762, guid: 56902b3aa76d64d758516d63a16b2014,
         type: 3}
       propertyPath: m_Name
@@ -3581,6 +3611,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2062961177}
     m_Modifications:
+    - target: {fileID: 6339815992645523349, guid: 29072c58f78a447e09e9ca55596cf76f,
+        type: 3}
+      propertyPath: board
+      value: 
+      objectReference: {fileID: 2078483188}
+    - target: {fileID: 6339815992645523349, guid: 29072c58f78a447e09e9ca55596cf76f,
+        type: 3}
+      propertyPath: position
+      value: A1
+      objectReference: {fileID: 0}
     - target: {fileID: 7410320487004687762, guid: 29072c58f78a447e09e9ca55596cf76f,
         type: 3}
       propertyPath: m_Name
