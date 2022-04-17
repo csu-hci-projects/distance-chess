@@ -6,13 +6,10 @@ public class Board : MonoBehaviour {
     public string[,] boardPosition = new string[8,8];
     public bool[,] tilesToUpdate = new bool[8,8];
     public string[,] attackersOf = new string[8,8];
-    public Dictionary<bool, string> kingPosition;
+    public Dictionary<bool, string> kingPosition = new Dictionary<bool, string>();
     public string check = "";
     public List<string> pins;
     void Start() {
-        kingPosition = new Dictionary<bool, string>();
-        kingPosition.Add(true, "E1");
-        kingPosition.Add(false, "E8");
         pins = new List<string>();
         signalUpdatesFromMove();
     }
@@ -31,16 +28,16 @@ public class Board : MonoBehaviour {
     }
 
     // puts piece information `value` at `position`
-    public bool put(string value, string position) {
+    public bool put(string piece, string position) {
         if(!Utils.validPosition(position))
             return false;
         
-        if(!(value is null || value.Length == 0)) {
-            if(value[1] == 'k') // if the piece is a king, update the king position
-                kingPosition[value[0] == 'w'] = position;
+        if(Utils.validPiece(piece) && Utils.pieceType(piece) == 'k') {
+            // if the piece is a king, update the king position
+            kingPosition[Utils.pieceIsWhite(piece)] = position;
         }
 
-        boardPosition[Utils.file(position), Utils.rank(position)] = value;
+        boardPosition[Utils.file(position), Utils.rank(position)] = piece;
         
         return true;
     }

@@ -11,7 +11,8 @@ public class King : MonoBehaviour {
     public bool isInCheck = false;
 
     void Start() {
-        
+        board.put(Utils.piece(white, 'k'), position);
+        Debug.Log(board.kingPosition[white]);
     }
 
     // Update is called once per frame
