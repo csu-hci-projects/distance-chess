@@ -88,7 +88,7 @@ public class Utils : MonoBehaviour
 
     public static List<string> getPositionsBetween(string positionA, string positionB) {
         List<string> positions = new List<string>();
-        int fa=file(positionA), fb=file(positionB);
+        int fa= file(positionA), fb= file(positionB);
         int ra=rank(positionA), rb=rank(positionB);
         if(sameFile(positionA,positionB)) {
             int file = fa;
@@ -217,6 +217,70 @@ public class Utils : MonoBehaviour
             }
         }
         return attacks;
+    }
+    public static List<string> getBishopAttacksFrom(Board board, bool white, string position) {
+        string bishop = white? "w":"b" + "b";
+        List<string> attacks = new List<string>();
+        int file=Utils.file(position), rank=Utils.rank(position);
+        bool[] shouldContinue = new bool[4];
+        for(int i=0; i<4; ++i) shouldContinue[i] = true;
+        int numDirs = 4;
+        for(int distance = 1; numDirs > 0; ++distance) {
+            // for each direction (up left, up right, down right, then down left)
+            for(int dir=0; dir < 4; ++dir) {
+                // first check if the direction still needs to be explored
+                if(!shouldContinue[dir]) continue;
+                // fd ~ file distance, rd ~ rank distance
+                int fd = distance, rd = distance;
+                fd *= (dir % 3 == 0)? -1 : 1; // if left (dir 0 or 3), negate it
+                rd *= (dir > 1)? -1 : 1; // if down (dir 2 or 3), negate it
+
+                // get the attack position for this direction, then check it
+                string attack = positionFrom(position, fd, rd);
+                string info = getAttackInfo(board, bishop, attack);
+                if(info is null) { // the move is illegal
+                    shouldContinue[dir] = false;
+                    --numDirs;
+                } else { // the attack exists, so we
+                    // add the position, then
+                    attacks.Add(attack);
+                    // designate whether to continue exploring the diagonal
+                    // - iff the square is empty, we should continue
+                    if(info[0] != 'E') {
+                        shouldContinue[dir] = false;
+                        --numDirs;
+                    }
+                }
+            }
+        }
+        return attacks;
+    }
+
+    // getAttackInfo(): useful for checking whether an attack is valid, and if it is
+    //   whether the attack would capture a piece or not
+    // - mostly useful for something rooks, bishops, & queens, for determining whether or not to
+    //   continue checking for attacks beyond the position
+    private static string getAttackInfo(Board board, string attackingPiece, string attackedPosition) {
+        bool valid = true, sameColor = false;
+        string attackedPiece = null;
+        // is the attacked position on the board?
+        if(!validPosition(attackedPosition))
+            valid = false;
+        else { // if it is, then
+            // get the piece on the attacked square if it exists
+            attackedPiece = board.pieceAt(attackedPosition);
+            if(validPiece(attackedPiece)) { // if it does
+                // check if the piece is capturable (i.e., other color)
+                sameColor = pieceColor(attackingPiece) == pieceColor(attackedPiece);
+            }
+        }
+
+        if(valid) { // if the attack square exists, return a string with
+            // 1. a character for "Guarded", "Capturable", or "Empty"
+            // 2. the attacked position
+            return validPiece(attackedPiece)? (sameColor? "G":"C"):"E" + attackedPosition;
+        }
+        return null;
     }
 
     public static string getPin(List<string> pins, string position) {
