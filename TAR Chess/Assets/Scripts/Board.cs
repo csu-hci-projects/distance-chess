@@ -6,14 +6,12 @@ public class Board : MonoBehaviour {
     public string[,] boardPosition = new string[8,8];
     public bool[,] tilesToUpdate = new bool[8,8];
     public string[,] attackersOf = new string[8,8];
-    public Dictionary<bool, string> kingPosition;
+    public Dictionary<bool, string> kingPosition = new Dictionary<bool, string>();
     public string check = "";
     public List<string> pins;
     void Start() {
-        kingPosition = new Dictionary<bool, string>();
-        kingPosition.Add(true, "E1");
-        kingPosition.Add(false, "E8");
         pins = new List<string>();
+        signalUpdatesFromMove();
     }
 
     // Update is called once per frame
@@ -30,17 +28,16 @@ public class Board : MonoBehaviour {
     }
 
     // puts piece information `value` at `position`
-    public bool put(string value, string position) {
+    public bool put(string piece, string position) {
         if(!Utils.validPosition(position))
             return false;
         
-        if(!(value is null || value.Length == 0)) {
-            if(value[1] == 'k') // if the piece is a king, update the king position
-                kingPosition[value[0] == 'w'] = position;
-        } else if(!Utils.validPiece(value))
-            return false;
+        if(Utils.validPiece(piece) && Utils.pieceType(piece) == 'k') {
+            // if the piece is a king, update the king position
+            kingPosition[Utils.pieceIsWhite(piece)] = position;
+        }
 
-        boardPosition[Utils.file(position), Utils.rank(position)] = value;
+        boardPosition[Utils.file(position), Utils.rank(position)] = piece;
         
         return true;
     }
@@ -61,7 +58,7 @@ public class Board : MonoBehaviour {
         else
             tilesToUpdate[Utils.file(position), Utils.rank(position)] = true;
     }
-    public void signalUpdatesFromMove(string fromPosition, string toPosition) {
+    public void signalUpdatesFromMove(string fromPosition ="", string toPosition ="") {
         // trivial method of updating pieces: force every piece to update
         // not very efficient, may want replacing
         for(int file=0; file<8; ++file) {
@@ -92,7 +89,7 @@ public class Board : MonoBehaviour {
         // find which pieces need updates because of this move
         signalUpdatesFromMove(fromPosition, toPosition);
 
-        put("", fromPosition);
+        put(null, fromPosition);
         put(movingPiece, toPosition);
         return true;
     }
@@ -161,5 +158,21 @@ public class Board : MonoBehaviour {
         
         attackersOf[file,rank] = attackersOf[file,rank].Replace("w"+attackingPosition, "");
         attackersOf[file,rank] = attackersOf[file,rank].Replace("b"+attackingPosition, "");
+    }
+    public bool isAttackedBy(bool white, string position) {
+        if(!Utils.validPosition(position))
+            return false;
+        string attackers = attackersOf[
+            Utils.file(position), Utils.rank(position)
+        ];
+        if(attackers is null)
+            return false;
+
+        for(int piece=0; piece < attackers.Length / 3; ++piece) {
+            char color = attackers[piece * 3];
+            if(color == (white? 'w':'b'))
+                return true;
+        }
+        return false;
     }
 }

@@ -157,4 +157,24 @@ public class Utils : MonoBehaviour
         int forward = white? 1:-1, side = left? -1:1;
         return positionFrom(position, side, forward);
     }
+
+    // returns true when move is completed
+    public static bool updateMove(Board board, Transform transform, String currentPosition, String movePosition) {
+        // check for a move position
+        if(!validPosition(movePosition))
+            return false;
+        
+        // if the piece has completed its move animation
+        if(pieceAt(transform, movePosition)) {
+            // update the board position
+            board.movePiece(currentPosition, movePosition);
+            // update local position
+            transform.localPosition = getLocalCoordsFromPosition(movePosition);
+
+            return true;
+        }
+        // otherwise, move towards the new position
+        transform.localPosition = moveTowards(transform, movePosition);
+        return false;
+    }
 }
