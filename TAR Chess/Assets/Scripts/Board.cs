@@ -59,7 +59,7 @@ public class Board : MonoBehaviour {
             tilesToUpdate[Utils.file(position), Utils.rank(position)] = true;
     }
     public void signalUpdatesFromMove(string fromPosition ="", string toPosition ="") {
-        // trivial method of updating pieces: force every piece to update
+        // trivial solution to updating pieces: force every piece to update
         // not very efficient, may want replacing
         for(int file=0; file<8; ++file) {
             for(int rank=0; rank<8; ++rank) {
@@ -73,18 +73,45 @@ public class Board : MonoBehaviour {
         if(!Utils.validPosition(fromPosition) || !Utils.validPosition(toPosition))    
             return false;
         string movingPiece = pieceAt(fromPosition);
-        if(movingPiece is null) return false;
-        if(toPosition is null) return false;
+        if(!Utils.validPiece(movingPiece)) return false;
+        if(!Utils.validPosition(toPosition)) return false;
 
-        bool moverWhite = movingPiece[0] == 'w';
-        char moverType = movingPiece[1];
+        bool moverWhite = Utils.pieceIsWhite(movingPiece);
+        char moverType = Utils.pieceType(movingPiece);
 
-        if(moverType == 'k' && attackingPosition(!moverWhite, toPosition))
-            return false;
-        if(moverType == 'p') {
-            add_pawnAttacksFromTile(moverWhite, toPosition);
-            remove_pawnAttacksFromTile(moverWhite, fromPosition);
+        List<string> oldAttacks, newAttacks;
+        if(moverType == 'k') { // king
+            if(attackingPosition(!moverWhite, toPosition))
+                return false;
+
+            oldAttacks = Utils.getKingAttacksFrom(fromPosition);
+            newAttacks = Utils.getKingAttacksFrom(toPosition);
         }
+        else if(moverType == 'q') { // queen
+            oldAttacks = new List<string>();
+            newAttacks = new List<string>();
+        }
+        else if(moverType == 'r') { // rook
+            oldAttacks = new List<string>();
+            newAttacks = new List<string>();
+        }
+        else if(moverType == 'n') { // knight
+            oldAttacks = new List<string>();
+            newAttacks = new List<string>();
+        }
+        else if(moverType == 'b') { // bishop
+            oldAttacks = new List<string>();
+            newAttacks = new List<string>();
+        }
+        else { // if(moverType == 'p') // pawn
+            oldAttacks = Utils.getPawnAttacksFrom(moverWhite, fromPosition);
+            newAttacks = Utils.getPawnAttacksFrom(moverWhite, toPosition);
+        }
+
+        foreach(string attack in oldAttacks)
+            removeAttacker(attack, fromPosition);
+        foreach(string attack in newAttacks)
+            addAttacker(moverWhite, attack, toPosition);
 
         // find which pieces need updates because of this move
         signalUpdatesFromMove(fromPosition, toPosition);
@@ -93,22 +120,6 @@ public class Board : MonoBehaviour {
         put(movingPiece, toPosition);
         return true;
     }
-        public void add_pawnAttacksFromTile(bool white, string position) {
-            int forward = white? 1:-1;
-            string
-                left = Utils.positionFrom(position,-1,forward),
-                right = Utils.positionFrom(position,1,forward);
-            addAttacker(white, left, position);
-            addAttacker(white, right, position);
-        }
-        public void remove_pawnAttacksFromTile(bool white, string position) {
-            int forward = white? 1:-1;
-            string
-                left = Utils.positionFrom(position,-1,forward),
-                right = Utils.positionFrom(position,1,forward);
-            removeAttacker(left, position);
-            removeAttacker(right, position);
-        }
 
     public bool attackingPosition(bool attackerIsWhite, string position) {
         if(!Utils.validPosition(position))
@@ -141,7 +152,7 @@ public class Board : MonoBehaviour {
         attackersOf[file,rank] += (white? "w":"b") + attackingPosition;
 
         // now check to see if attacked tile has the other color's king
-        if(kingPosition is null) return;
+        if(!kingPosition.ContainsKey(!white)) return;
         string otherKing = kingPosition[!white];
         if(!(otherKing is null) && otherKing.Equals(attackedPosition))
             check = (!white? "w":"b") + attackingPosition;

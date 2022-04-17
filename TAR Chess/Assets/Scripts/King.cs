@@ -12,7 +12,8 @@ public class King : MonoBehaviour {
 
     void Start() {
         board.put(Utils.piece(white, 'k'), position);
-        Debug.Log(board.kingPosition[white]);
+        foreach(string attack in Utils.getKingAttacksFrom(position))
+            board.addAttacker(white, attack, position);
     }
 
     // Update is called once per frame
