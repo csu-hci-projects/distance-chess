@@ -92,8 +92,8 @@ public class Board : MonoBehaviour {
             newAttacks = new List<string>();
         }
         else if(moverType == 'r') { // rook
-            oldAttacks = new List<string>();
-            newAttacks = new List<string>();
+            oldAttacks = Utils.getRookAttacksFrom(this, moverWhite, fromPosition);
+            newAttacks = Utils.getRookAttacksFrom(this, moverWhite, toPosition);
         }
         else if(moverType == 'n') { // knight
             oldAttacks = Utils.getKnightAttacksFrom(fromPosition);
