@@ -218,9 +218,8 @@ public class Utils : MonoBehaviour
         }
         return attacks;
     }
-    public static List<string> getBishopAttacksFrom(Board board, string position) {
-        string bishop = board.pieceAt(position);
-        if(!validPiece(bishop)) return null;
+    public static List<string> getBishopAttacksFrom(Board board, bool white, string position) {
+        string bishop = white? "w":"b" + "b";
         List<string> attacks = new List<string>();
         int file=Utils.file(position), rank=Utils.rank(position);
         bool[] shouldContinue = new bool[4];
