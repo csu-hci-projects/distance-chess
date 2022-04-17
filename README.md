@@ -20,17 +20,17 @@ This will primarily be built for iOS, but future builds could include Android.
 - [ ] Piece move scripting
   - [x] animations
   - [x] pawns
-  - [ ] kings
-  - [ ] rooks
-  - [ ] knights
-  - [ ] bishops
-  - [ ] queens
+  - [x] kings
+  - [x] rooks
+  - [x] knights
+  - [x] bishops
+  - [ ] queens (in progress)
 - [ ] Board scripting
   - [x] piece positions
-  - [ ] attacks on tiles (in progress)
+  - [ ] attacks on tiles (in progress, missing queen attacks)
   - [ ] checks & checkmates (in progress)
   - [ ] stalemates
-  - [ ] pins on pieces (in progress)
+  - [ ] pins on pieces
   - [ ] captures (in progress)
   - [ ] en passant captures
   - [ ] pawn promotions
@@ -39,6 +39,11 @@ This will primarily be built for iOS, but future builds could include Android.
   - [ ] recognizes moves
   - [ ] checks for captures on player's pieces
   - [ ] highlights legal move tiles when player picks up piece
+
+The reason computer vision is marked as "may not be implemented" is due to the scope of the project.
+If time permits, we will integrate computer vision into the application; however, if this is not the case, we may need to implement a developer interface which sidesteps the computer vision aspect.
+This would be the "Wizard of Oz" solution, in which we would tell the experiment's participants that the application recognizes their moves, while in reality the experimenters would be manually entering the participant's moves.
+This will already be done for the chess engine's moves, so the interface for the experimenters will already be present.
 
 # Outside Resources
 ## Unity Software
