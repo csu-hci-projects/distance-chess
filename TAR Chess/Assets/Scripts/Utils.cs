@@ -263,7 +263,7 @@ public class Utils : MonoBehaviour
         bool[] shouldContinue = new bool[4];
         for(int i=0; i<4; ++i) shouldContinue[i] = true;
         int numDirs=4;
-        for(int distance=0; numDirs>0; ++distance) {
+        for(int distance=1; numDirs>0; ++distance) {
             // for each direction (left, up, right, down)
             for(int dir=0; dir<4; ++dir) {
                 if(!shouldContinue[dir]) continue;
