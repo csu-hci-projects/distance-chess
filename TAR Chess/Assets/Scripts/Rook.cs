@@ -20,6 +20,26 @@ public class Rook : MonoBehaviour {
     }
 
     void updatePossibleMoves() {
+        possibleMoves = Utils.getRookAttacksFrom(board, white, position);
+        List<string> illegalMoves = new List<string>();
+        foreach(string move in possibleMoves) {
+            string piece = board.pieceAt(move);
+            if(Utils.validPiece(piece) && Utils.pieceColor(piece) == (white? 'w':'b'))
+                illegalMoves.Add(move);
+        }
+        if(Utils.validPosition(pin)) { // if this piece is pinned
+            List<string> betweens = Utils.getPositionsBetween(position, pin);
+            foreach(string move in possibleMoves) {
+                if(move.Equals(pin)) // move is legal if it captures the pinning piece
+                    continue;
+                if(betweens.Contains(move)) // move is legal if it is within the pin
+                    continue;
+                illegalMoves.Add(move); // otherwise, the move is illegal
+            }
+        }
 
+        // remove all the illegal moves
+        foreach(string move in illegalMoves)
+            possibleMoves.Remove(move);
     }
 }
