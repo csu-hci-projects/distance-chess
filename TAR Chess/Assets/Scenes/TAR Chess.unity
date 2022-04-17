@@ -562,6 +562,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2062961177}
     m_Modifications:
+    - target: {fileID: -1511589543088308060, guid: a8f7e0e006bb0478fa8bb11ef060d709,
+        type: 3}
+      propertyPath: board
+      value: 
+      objectReference: {fileID: 2078483188}
+    - target: {fileID: -1511589543088308060, guid: a8f7e0e006bb0478fa8bb11ef060d709,
+        type: 3}
+      propertyPath: position
+      value: F1
+      objectReference: {fileID: 0}
     - target: {fileID: 1003520967994840, guid: a8f7e0e006bb0478fa8bb11ef060d709, type: 3}
       propertyPath: m_Name
       value: K Bishop
@@ -1040,6 +1050,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 941240474}
     m_Modifications:
+    - target: {fileID: -5592452374352389981, guid: c2f07e0574a4241d9a9042c286d64ce1,
+        type: 3}
+      propertyPath: board
+      value: 
+      objectReference: {fileID: 2078483188}
+    - target: {fileID: -5592452374352389981, guid: c2f07e0574a4241d9a9042c286d64ce1,
+        type: 3}
+      propertyPath: position
+      value: F8
+      objectReference: {fileID: 0}
     - target: {fileID: 1003520967994840, guid: c2f07e0574a4241d9a9042c286d64ce1, type: 3}
       propertyPath: m_Name
       value: K Bishop
@@ -1272,6 +1292,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 941240474}
     m_Modifications:
+    - target: {fileID: -5592452374352389981, guid: c2f07e0574a4241d9a9042c286d64ce1,
+        type: 3}
+      propertyPath: board
+      value: 
+      objectReference: {fileID: 2078483188}
+    - target: {fileID: -5592452374352389981, guid: c2f07e0574a4241d9a9042c286d64ce1,
+        type: 3}
+      propertyPath: position
+      value: C8
+      objectReference: {fileID: 0}
     - target: {fileID: 1003520967994840, guid: c2f07e0574a4241d9a9042c286d64ce1, type: 3}
       propertyPath: m_Name
       value: Q Bishop
@@ -2180,6 +2210,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2062961177}
     m_Modifications:
+    - target: {fileID: -1511589543088308060, guid: a8f7e0e006bb0478fa8bb11ef060d709,
+        type: 3}
+      propertyPath: board
+      value: 
+      objectReference: {fileID: 2078483188}
+    - target: {fileID: -1511589543088308060, guid: a8f7e0e006bb0478fa8bb11ef060d709,
+        type: 3}
+      propertyPath: position
+      value: C1
+      objectReference: {fileID: 0}
     - target: {fileID: 1003520967994840, guid: a8f7e0e006bb0478fa8bb11ef060d709, type: 3}
       propertyPath: m_Name
       value: Q Bishop
