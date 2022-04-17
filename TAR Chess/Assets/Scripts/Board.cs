@@ -79,12 +79,27 @@ public class Board : MonoBehaviour {
         bool moverWhite = movingPiece[0] == 'w';
         char moverType = movingPiece[1];
 
-        if(moverType == 'k' && attackingPosition(!moverWhite, toPosition))
-            return false;
-        if(moverType == 'p') {
-            add_pawnAttacksFromTile(moverWhite, toPosition);
-            remove_pawnAttacksFromTile(moverWhite, fromPosition);
+        List<string> oldAttacks, newAttacks;
+        if(moverType == 'k') {
+            if(attackingPosition(!moverWhite, toPosition))
+                return false;
+
+            oldAttacks = Utils.getKingAttacksFrom(fromPosition);
+            newAttacks = Utils.getKingAttacksFrom(toPosition);
         }
+        else if(moverType == 'p') {
+            oldAttacks = Utils.getPawnAttacksFrom(moverWhite, fromPosition);
+            newAttacks = Utils.getPawnAttacksFrom(moverWhite, toPosition);
+        }
+        else { // code will never reach this, but it resolves compiler errors
+            oldAttacks = new List<string>();
+            newAttacks = new List<string>();
+        }
+
+        foreach(string attack in oldAttacks)
+            removeAttacker(attack, fromPosition);
+        foreach(string attack in newAttacks)
+            addAttacker(moverWhite, attack, toPosition);
 
         // find which pieces need updates because of this move
         signalUpdatesFromMove(fromPosition, toPosition);
@@ -93,22 +108,6 @@ public class Board : MonoBehaviour {
         put(movingPiece, toPosition);
         return true;
     }
-        public void add_pawnAttacksFromTile(bool white, string position) {
-            int forward = white? 1:-1;
-            string
-                left = Utils.positionFrom(position,-1,forward),
-                right = Utils.positionFrom(position,1,forward);
-            addAttacker(white, left, position);
-            addAttacker(white, right, position);
-        }
-        public void remove_pawnAttacksFromTile(bool white, string position) {
-            int forward = white? 1:-1;
-            string
-                left = Utils.positionFrom(position,-1,forward),
-                right = Utils.positionFrom(position,1,forward);
-            removeAttacker(left, position);
-            removeAttacker(right, position);
-        }
 
     public bool attackingPosition(bool attackerIsWhite, string position) {
         if(!Utils.validPosition(position))

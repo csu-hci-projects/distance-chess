@@ -177,4 +177,30 @@ public class Utils : MonoBehaviour
         transform.localPosition = moveTowards(transform, movePosition);
         return false;
     }
+
+    public static List<string> getKingAttacksFrom(string position) {
+        List<string> attacks = new List<string>();
+        int file = Utils.file(position), rank = Utils.rank(position);
+        for(int f = file - 1; f <= file + 1; ++f) {
+            if(f < 0 || f > 7)
+                continue;
+            for(int r = rank - 1; r <= rank + 1; ++r) {
+                if(r < 0 || r > 7)
+                    continue;
+                if(f == file && r == rank)
+                    continue;
+                
+                attacks.Add(Utils.position(f,r));
+            }
+        }
+        return attacks;
+    }
+    public static List<string> getPawnAttacksFrom(bool white, string position) {
+        List<string> attacks = new List<string>();
+        string pos = Utils.positionFrom(position, -1, white? 1:-1);
+        if(!(pos is null)) attacks.Add(pos);
+        pos = Utils.positionFrom(position, 1, white? 1:-1);
+        if(!(pos is null)) attacks.Add(pos);
+        return attacks;
+    }
 }

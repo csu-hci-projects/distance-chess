@@ -15,7 +15,8 @@ public class Pawn : MonoBehaviour {
         transform.localPosition = Utils.getLocalCoordsFromPosition(position);
         board.put(Utils.piece(white, 'p'), position);
         updatePossibleMoves();
-        board.add_pawnAttacksFromTile(white, position);
+        foreach(string attack in Utils.getPawnAttacksFrom(white, position))
+            board.addAttacker(white, attack, position);
     }
 
     void Update() {
