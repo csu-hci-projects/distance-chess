@@ -26,6 +26,7 @@ public class King : MonoBehaviour {
         if(Utils.updateMove(board, transform, position, movePosition)) {
             position = Utils.position(Utils.file(movePosition), Utils.rank(movePosition));
             movePosition = null;
+            firstMove = false;
         }
     }
 
