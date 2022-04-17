@@ -5,7 +5,7 @@ using UnityEngine;
 public class King : MonoBehaviour {
     public Board board;
     public bool white;
-    public string position=null, movePosition=null;
+    public string position, movePosition=null;
     public string[] possibleMoves = new string[10];
     public bool firstMove = true, kingsRookMoved = false, queensRookMoved = false;
     public bool isInCheck = false;
@@ -21,7 +21,10 @@ public class King : MonoBehaviour {
             updatePossibleMoves();
         }
         
-        Utils.updateMove(board, transform, position, movePosition);
+        if(Utils.updateMove(board, transform, position, movePosition)) {
+            position = Utils.position(Utils.file(movePosition), Utils.rank(movePosition));
+            movePosition = null;
+        }
     }
 
     public void updatePossibleMoves() {
@@ -65,13 +68,10 @@ public class King : MonoBehaviour {
                 bool guarded = board.isAttackedBy(!white, movePosition);
                 if(guarded) { // and it is guarded, it's an illegal move
                     possibleMoves[i] = null;
-                    Debug.Log(movePosition+":"+piece+" - illegal: guarded");
                 }
                 // if it's not guarded, it can be taken and we don't need to nullify the move
-                Debug.Log(movePosition+":"+piece+" - allowed: capture");
             } else { // if the piece is the same color, it's an illegal move
                 possibleMoves[i] = null;
-                Debug.Log(movePosition+":"+piece+" - illegal: occupied");
             }
         }
     }

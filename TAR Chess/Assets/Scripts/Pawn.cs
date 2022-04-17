@@ -31,7 +31,10 @@ public class Pawn : MonoBehaviour {
             // update the pawn's moveset
             updatePossibleMoves();
         }
-        Utils.updateMove(board, transform, position, movePosition);
+        if(Utils.updateMove(board, transform, position, movePosition)) {
+            position = Utils.position(Utils.file(movePosition), Utils.rank(movePosition));
+            movePosition = null;
+        }
     }
 
     // simple method to get position from a forward move
