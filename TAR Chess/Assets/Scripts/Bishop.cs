@@ -9,6 +9,9 @@ public class Bishop : MonoBehaviour {
     public List<string> possibleMoves = new List<string>();
     void Start() {
         board.put(Utils.piece(white, 'b'), position);
+        foreach(string attack in Utils.getBishopAttacksFrom(board, white, position)) {
+            board.addAttacker(white, attack, position);
+        }
     }
 
     void Update() {
