@@ -206,6 +206,7 @@ public class Utils : MonoBehaviour
     public static List<string> getKnightAttacksFrom(string position) {
         List<string> attacks = new List<string>();
         for(int f=-2; f < 3; ++f) {
+            if(f == 0) continue;
             for(int r = -1; r < 2; r += 2) {
                 string attack = positionFrom(position,
                     f, (Math.Abs(f)==1? 2:1) * r
