@@ -1211,6 +1211,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Q Knight
       objectReference: {fileID: 0}
+    - target: {fileID: 2819426966396562, guid: 1b1f559bfdac84ab388545154d81dcf8, type: 3}
+      propertyPath: board
+      value: 
+      objectReference: {fileID: 2078483188}
+    - target: {fileID: 2819426966396562, guid: 1b1f559bfdac84ab388545154d81dcf8, type: 3}
+      propertyPath: position
+      value: B1
+      objectReference: {fileID: 0}
     - target: {fileID: 4492593383673758, guid: 1b1f559bfdac84ab388545154d81dcf8, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -1912,6 +1920,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 941240474}
     m_Modifications:
+    - target: {fileID: -4391622655643331649, guid: cf5f373ea12384d0490189467be16f33,
+        type: 3}
+      propertyPath: board
+      value: 
+      objectReference: {fileID: 2078483188}
+    - target: {fileID: -4391622655643331649, guid: cf5f373ea12384d0490189467be16f33,
+        type: 3}
+      propertyPath: position
+      value: B8
+      objectReference: {fileID: 0}
     - target: {fileID: 1589209476840242, guid: cf5f373ea12384d0490189467be16f33, type: 3}
       propertyPath: m_Name
       value: Q Knight
@@ -2567,6 +2585,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: K Knight
       objectReference: {fileID: 0}
+    - target: {fileID: 2819426966396562, guid: 1b1f559bfdac84ab388545154d81dcf8, type: 3}
+      propertyPath: board
+      value: 
+      objectReference: {fileID: 2078483188}
+    - target: {fileID: 2819426966396562, guid: 1b1f559bfdac84ab388545154d81dcf8, type: 3}
+      propertyPath: position
+      value: G1
+      objectReference: {fileID: 0}
     - target: {fileID: 4492593383673758, guid: 1b1f559bfdac84ab388545154d81dcf8, type: 3}
       propertyPath: m_RootOrder
       value: 7
@@ -2875,6 +2901,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 941240474}
     m_Modifications:
+    - target: {fileID: -4391622655643331649, guid: cf5f373ea12384d0490189467be16f33,
+        type: 3}
+      propertyPath: board
+      value: 
+      objectReference: {fileID: 2078483188}
+    - target: {fileID: -4391622655643331649, guid: cf5f373ea12384d0490189467be16f33,
+        type: 3}
+      propertyPath: position
+      value: G8
+      objectReference: {fileID: 0}
     - target: {fileID: 1589209476840242, guid: cf5f373ea12384d0490189467be16f33, type: 3}
       propertyPath: m_Name
       value: K Knight

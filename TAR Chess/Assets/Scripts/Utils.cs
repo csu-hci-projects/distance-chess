@@ -203,4 +203,28 @@ public class Utils : MonoBehaviour
         if(!(pos is null)) attacks.Add(pos);
         return attacks;
     }
+    public static List<string> getKnightAttacksFrom(string position) {
+        List<string> attacks = new List<string>();
+        for(int f=-2; f < 3; ++f) {
+            for(int r = -1; r < 2; r += 2) {
+                string attack = positionFrom(position,
+                    f, (Math.Abs(f)==1? 2:1) * r
+                );
+                if(attack is null)
+                    continue;
+                attacks.Add(attack);
+            }
+        }
+        return attacks;
+    }
+
+    public static string getPin(List<string> pins, string position) {
+        if(!validPosition(position))
+            return null;
+        foreach(string pin in pins) {
+            if(pin.Contains(position))
+                return pin.Substring(0,2);
+        }
+        return null;
+    }
 }
