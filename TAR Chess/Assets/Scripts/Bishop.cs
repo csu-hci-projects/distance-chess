@@ -11,8 +11,27 @@ public class Bishop : MonoBehaviour {
         
     }
 
-    void Update()
-    {
+    void Update() {
         
+    }
+
+    void updatePossibleMoves() {
+        if(Utils.validPosition(pin)) { // if this piece is pinned
+            List<string>
+                betweens = Utils.getPositionsBetween(position, pin),
+                illegalMoves = new List<string>();
+            foreach(string move in possibleMoves) {
+                if(move.Equals(pin)) // move is legal if it captures the pinning piece
+                    continue;
+                if(betweens.Contains(move)) // move is legal if it is within the pin
+                    continue;
+                illegalMoves.Add(move); // otherwise, the move is illegal
+            }
+
+            // remove all the illegal moves
+            foreach(string move in illegalMoves)
+                possibleMoves.Remove(move);
+            return;
+        }
     }
 }
