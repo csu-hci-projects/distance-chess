@@ -7,11 +7,11 @@ public class Pawn : MonoBehaviour {
     public bool white, alive;
     public string position, movePosition;
     public string[] possibleMoves;
-    public List<string> pins;
+    public string pin;
 
     void Start() {
         possibleMoves = new string[4];
-        pins = new List<string>();
+        pin = null;
         transform.localPosition = Utils.getLocalCoordsFromPosition(position);
         board.put(Utils.piece(white, 'p'), position);
         updatePossibleMoves();
@@ -20,13 +20,15 @@ public class Pawn : MonoBehaviour {
 
     void Update() {
         if(board.needsUpdate(position)) {
-            pins.Clear();
+            pin = null;
             foreach(string pin in board.pins) {
                 // if the pin has nothing to do with this piece, skip it
                 if(!pin.Contains(position))
                     continue;
-                else // otherwise add it to the local list of pins (pawns cannot pin, guaranteed to be a pin *on* this piece)
-                    pins.Add(pin.Substring(2,2));
+                else { // otherwise set the pin position to the attacker's position
+                    this.pin = pin.Substring(2,2);
+                    break;
+                }
             }
             // update the pawn's moveset
             updatePossibleMoves();
@@ -87,12 +89,11 @@ public class Pawn : MonoBehaviour {
     // check the current move space's validity under pin rules
     private void checkPins() {
         // if there are no pins on this piece, no work is needed
-        if(pins.Count == 0)
+        if(pin is null)
             return;
 
-        string pinnerPosition = pins[0];
         // get positions between this piece and pinning piece
-        List<string> betweens = Utils.getPositionsBetween(position,pinnerPosition);
+        List<string> betweens = Utils.getPositionsBetween(position, pin);
 
         for(int i=0; i<2; ++i) {
             // now, ensure that possible moves only contains positions within the pin
@@ -102,7 +103,7 @@ public class Pawn : MonoBehaviour {
         }
         for(int i=2; i<4; ++i) {
             // capture is only allowed if this pawn captures the pinning piece
-            if(possibleMoves[i] != pinnerPosition)
+            if(possibleMoves[i] != pin)
                 forbidMove(i);
         }
     }
