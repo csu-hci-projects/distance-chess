@@ -8,14 +8,17 @@ public class Bishop : MonoBehaviour {
     public string position, movePosition, pin = null;
     public List<string> possibleMoves = new List<string>();
     void Start() {
-        
+        board.put(Utils.piece(white, 'b'), position);
     }
 
     void Update() {
-        
+        if(board.needsUpdate(position)) {
+            updatePossibleMoves();
+        }
     }
 
     void updatePossibleMoves() {
+        possibleMoves = Utils.getBishopAttacksFrom(board, position);
         if(Utils.validPosition(pin)) { // if this piece is pinned
             List<string>
                 betweens = Utils.getPositionsBetween(position, pin),
