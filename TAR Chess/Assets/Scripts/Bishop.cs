@@ -15,14 +15,23 @@ public class Bishop : MonoBehaviour {
         if(board.needsUpdate(position)) {
             updatePossibleMoves();
         }
+        
+        if(Utils.updateMove(board, transform, position, movePosition)) {
+            position = Utils.position(Utils.file(movePosition), Utils.rank(movePosition));
+            movePosition = null;
+        }
     }
 
     void updatePossibleMoves() {
         possibleMoves = Utils.getBishopAttacksFrom(board, white, position);
+        List<string> illegalMoves = new List<string>();
+        foreach(string move in possibleMoves) {
+            string piece = board.pieceAt(move);
+            if(Utils.validPiece(piece) && Utils.pieceColor(piece) == (white? 'w':'b'))
+                illegalMoves.Add(move);
+        }
         if(Utils.validPosition(pin)) { // if this piece is pinned
-            List<string>
-                betweens = Utils.getPositionsBetween(position, pin),
-                illegalMoves = new List<string>();
+            List<string> betweens = Utils.getPositionsBetween(position, pin);
             foreach(string move in possibleMoves) {
                 if(move.Equals(pin)) // move is legal if it captures the pinning piece
                     continue;
@@ -30,11 +39,10 @@ public class Bishop : MonoBehaviour {
                     continue;
                 illegalMoves.Add(move); // otherwise, the move is illegal
             }
-
-            // remove all the illegal moves
-            foreach(string move in illegalMoves)
-                possibleMoves.Remove(move);
-            return;
         }
+
+        // remove all the illegal moves
+        foreach(string move in illegalMoves)
+            possibleMoves.Remove(move);
     }
 }

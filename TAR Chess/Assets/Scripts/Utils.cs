@@ -241,12 +241,12 @@ public class Utils : MonoBehaviour
                 if(info is null) { // the move is illegal
                     shouldContinue[dir] = false;
                     --numDirs;
-                } else { // the move is legal
+                } else { // the attack exists, so we
                     // add the position, then
                     attacks.Add(attack);
                     // designate whether to continue exploring the diagonal
                     // - iff the square is empty, we should continue
-                    if(info[0] == 'C') {
+                    if(info[0] != 'E') {
                         shouldContinue[dir] = false;
                         --numDirs;
                     }
@@ -261,23 +261,24 @@ public class Utils : MonoBehaviour
     // - mostly useful for something rooks, bishops, & queens, for determining whether or not to
     //   continue checking for attacks beyond the position
     private static string getAttackInfo(Board board, string attackingPiece, string attackedPosition) {
-        bool valid = true;
-        string piece = null;
+        bool valid = true, sameColor = false;
+        string attackedPiece = null;
         // is the attacked position on the board?
         if(!validPosition(attackedPosition))
             valid = false;
         else { // if it is, then
             // get the piece on the attacked square if it exists
-            piece = board.pieceAt(attackedPosition);
-            if(validPiece(piece)) // if it does
+            attackedPiece = board.pieceAt(attackedPosition);
+            if(validPiece(attackedPiece)) { // if it does
                 // check if the piece is capturable (i.e., other color)
-                valid = pieceIsWhite(attackingPiece) ^ pieceIsWhite(piece);
+                sameColor = pieceColor(attackingPiece) == pieceColor(attackedPiece);
+            }
         }
 
-        if(valid) { // if the move is into empty space or capturable, return a string with
-            // 1. a character for "Capturable" or "Empty"
+        if(valid) { // if the attack square exists, return a string with
+            // 1. a character for "Guarded", "Capturable", or "Empty"
             // 2. the attacked position
-            return validPiece(piece)? "C":"E" + attackedPosition;
+            return validPiece(attackedPiece)? (sameColor? "G":"C"):"E" + attackedPosition;
         }
         return null;
     }
