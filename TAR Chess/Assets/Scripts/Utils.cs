@@ -293,6 +293,11 @@ public class Utils : MonoBehaviour
 
         return attacks;
     }
+    public static List<string> getQueenAttacksFrom(Board board, bool white, string position) {
+        List<string> attacks = getBishopAttacksFrom(board, white, position);
+        attacks.AddRange(getRookAttacksFrom(board, white, position));
+        return attacks;
+    }
 
     // getAttackInfo(): useful for checking whether an attack is valid, and if it is
     //   whether the attack would capture a piece or not
