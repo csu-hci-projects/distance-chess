@@ -16,6 +16,11 @@ public class Queen : MonoBehaviour {
         if(board.needsUpdate(position)) {
             updatePossibleMoves();
         }
+        
+        if(Utils.updateMove(board, transform, position, movePosition)) {
+            position = Utils.position(Utils.file(movePosition), Utils.rank(movePosition));
+            movePosition = null;
+        }
     }
 
     public void updatePossibleMoves() {
