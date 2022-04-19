@@ -81,13 +81,48 @@ public class Board : MonoBehaviour {
             return false;
 
         bool moverWhite = Utils.pieceIsWhite(movingPiece);
-        char moverColor = Utils.pieceColor(movingPiece);
         char moverType = Utils.pieceType(movingPiece);
 
         if((PGN.Count % 2 == 0) != moverWhite)
             return false;
-        else {
+        else addPgnMove(movingPiece, fromPosition, toPosition);
+
+        if(moverType == 'K') { // king cannot move into check
+            if(attackingPosition(!moverWhite, toPosition))
+                return false;
+        }
+
+        // now we update the attacks on all affected positions
+        foreach(string attack in getAttacks(moverType, moverWhite, fromPosition))
+            removeAttacker(attack, fromPosition);
+        foreach(string attack in getAttacks(moverType, moverWhite, toPosition))
+            addAttacker(moverWhite, attack, toPosition);
+
+        // find which pieces need updates because of this move
+        signalUpdatesFromMove(fromPosition, toPosition);
+
+        put(null, fromPosition);
+        put(movingPiece, toPosition);
+        return true;
+    }
+        private List<string> getAttacks(char moverType, bool moverWhite, string position) {
+            if(moverType == 'K') // king
+                return Utils.getKingAttacksFrom(position);
+            if(moverType == 'Q')  // queen
+                return Utils.getQueenAttacksFrom(this, moverWhite, position);
+            if(moverType == 'R')  // rook
+                return Utils.getRookAttacksFrom(this, moverWhite, position);
+            if(moverType == 'N')  // knight
+                return Utils.getKnightAttacksFrom(position);
+            if(moverType == 'B')  // bishop
+                return Utils.getBishopAttacksFrom(this, moverWhite, position);
+            // pawn
+            return Utils.getPawnAttacksFrom(moverWhite, position);
+        }
+        private void addPgnMove(string movingPiece, string fromPosition, string toPosition) {
             string pgnMove = "";
+            char moverType = Utils.pieceType(movingPiece);
+            char moverColor = Utils.pieceColor(movingPiece);
             if(moverType == 'P') {
                 if(!Utils.sameFile(fromPosition, toPosition)) {
                     pgnMove += fromPosition[0] + "x";
@@ -113,64 +148,21 @@ public class Board : MonoBehaviour {
                     alternateFiles += Utils.file(alternatePosition);
                     alternateRanks += Utils.rank(alternatePosition);
                     break;
-                }
+            }
 
-                if(alternateFiles.Length > 0) // other attacker of same type exists
-                    if(alternateFiles.Contains("" + fromPosition[0])) {
-                        if(alternateRanks.Contains("" + fromPosition[1])) // neither file nor rank unique
-                            pgnMove += fromPosition;
-                        else // rank is unique
-                            pgnMove += fromPosition[1];
-                    } else // file is unique
-                        pgnMove += fromPosition[0];
+            if(alternateFiles.Length > 0) // other attacker of same type exists
+                if(alternateFiles.Contains("" + fromPosition[0])) {
+                    if(alternateRanks.Contains("" + fromPosition[1])) // neither file nor rank unique
+                        pgnMove += fromPosition;
+                    else // rank is unique
+                        pgnMove += fromPosition[1];
+                } else // file is unique
+                    pgnMove += fromPosition[0];
             }
 
             pgnMove += toPosition;
             PGN.Add(pgnMove);
         }
-
-        List<string> oldAttacks, newAttacks;
-        if(moverType == 'K') { // king
-            if(attackingPosition(!moverWhite, toPosition))
-                return false;
-
-            oldAttacks = Utils.getKingAttacksFrom(fromPosition);
-            newAttacks = Utils.getKingAttacksFrom(toPosition);
-        }
-        else if(moverType == 'Q') { // queen
-            oldAttacks = Utils.getQueenAttacksFrom(this, moverWhite, fromPosition);
-            newAttacks = Utils.getQueenAttacksFrom(this, moverWhite, toPosition);
-        }
-        else if(moverType == 'R') { // rook
-            oldAttacks = Utils.getRookAttacksFrom(this, moverWhite, fromPosition);
-            newAttacks = Utils.getRookAttacksFrom(this, moverWhite, toPosition);
-        }
-        else if(moverType == 'N') { // knight
-            oldAttacks = Utils.getKnightAttacksFrom(fromPosition);
-            newAttacks = Utils.getKnightAttacksFrom(toPosition);
-        }
-        else if(moverType == 'B') { // bishop
-            oldAttacks = Utils.getBishopAttacksFrom(this, moverWhite, fromPosition);
-            newAttacks = Utils.getBishopAttacksFrom(this, moverWhite, toPosition);
-        }
-        else { // if(moverType == 'P') // pawn
-            oldAttacks = Utils.getPawnAttacksFrom(moverWhite, fromPosition);
-            newAttacks = Utils.getPawnAttacksFrom(moverWhite, toPosition);
-        }
-
-        // now we update the attacks on all affected positions
-        foreach(string attack in oldAttacks)
-            removeAttacker(attack, fromPosition);
-        foreach(string attack in newAttacks)
-            addAttacker(moverWhite, attack, toPosition);
-
-        // find which pieces need updates because of this move
-        signalUpdatesFromMove(fromPosition, toPosition);
-
-        put(null, fromPosition);
-        put(movingPiece, toPosition);
-        return true;
-    }
 
     public bool attackingPosition(bool attackerIsWhite, string position) {
         if(!Utils.validPosition(position))
