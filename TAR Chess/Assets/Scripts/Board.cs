@@ -88,8 +88,8 @@ public class Board : MonoBehaviour {
             newAttacks = Utils.getKingAttacksFrom(toPosition);
         }
         else if(moverType == 'q') { // queen
-            oldAttacks = new List<string>();
-            newAttacks = new List<string>();
+            oldAttacks = Utils.getQueenAttacksFrom(this, moverWhite, fromPosition);
+            newAttacks = Utils.getQueenAttacksFrom(this, moverWhite, toPosition);
         }
         else if(moverType == 'r') { // rook
             oldAttacks = Utils.getRookAttacksFrom(this, moverWhite, fromPosition);
