@@ -40,17 +40,17 @@ This will primarily be built for iOS, but future builds could include Android.
   - [x] basic piece and board rendering
   - [ ] only renders opponents' pieces (in progress)
   - [ ] occlusion (may not be implemented)
-- [ ] Piece move scripting
+- [x] Piece move scripting
   - [x] animations
   - [x] pawns
   - [x] kings
   - [x] rooks
   - [x] knights
   - [x] bishops
-  - [ ] queens (in progress)
+  - [x] queens
 - [ ] `Board` scripting
   - [x] piece positions
-  - [ ] attacks on tiles (in progress, missing queen attacks)
+  - [x] attacks on tiles
   - [ ] checks & checkmates (in progress)
   - [ ] stalemates
   - [ ] pins on pieces
