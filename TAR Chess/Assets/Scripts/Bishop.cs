@@ -8,7 +8,7 @@ public class Bishop : MonoBehaviour {
     public string position, movePosition, pin = null;
     public List<string> possibleMoves = new List<string>();
     void Start() {
-        board.put(Utils.piece(white, 'b'), position);
+        board.put(Utils.piece(white, 'B'), position);
         // add guarding info to each pawn to the bishop's sides
         foreach(string attack in Utils.getBishopAttacksFrom(board, white, position)) {
             board.addAttacker(white, attack, position);

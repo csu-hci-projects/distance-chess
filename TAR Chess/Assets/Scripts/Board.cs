@@ -8,6 +8,8 @@ public class Board : MonoBehaviour {
     public string[,] attackersOf = new string[8,8];
     public Dictionary<bool, string> kingPosition = new Dictionary<bool, string>();
     public string check = "";
+    public List<string> PGN = new List<string>();
+    public string moveToMake = "";
     public List<string> pins;
     void Start() {
         pins = new List<string>();
@@ -32,7 +34,7 @@ public class Board : MonoBehaviour {
         if(!Utils.validPosition(position))
             return false;
         
-        if(Utils.validPiece(piece) && Utils.pieceType(piece) == 'k') {
+        if(Utils.validPiece(piece) && Utils.pieceType(piece) == 'K') {
             // if the piece is a king, update the king position
             kingPosition[Utils.pieceIsWhite(piece)] = position;
         }
@@ -73,37 +75,85 @@ public class Board : MonoBehaviour {
         if(!Utils.validPosition(fromPosition) || !Utils.validPosition(toPosition))    
             return false;
         string movingPiece = pieceAt(fromPosition);
-        if(!Utils.validPiece(movingPiece)) return false;
-        if(!Utils.validPosition(toPosition)) return false;
+        if(!Utils.validPiece(movingPiece))
+            return false;
+        if(!Utils.validPosition(toPosition))
+            return false;
 
         bool moverWhite = Utils.pieceIsWhite(movingPiece);
+        char moverColor = Utils.pieceColor(movingPiece);
         char moverType = Utils.pieceType(movingPiece);
 
+        if((PGN.Count % 2 == 0) != moverWhite)
+            return false;
+        else {
+            string pgnMove = "";
+            if(moverType == 'P') {
+                if(!Utils.sameFile(fromPosition, toPosition)) {
+                    pgnMove += fromPosition[0] + "x";
+                }
+                
+            } else {
+                pgnMove += moverType;
+
+                string alternateFiles = "", alternateRanks = "";
+                string alternates = attackersOf[Utils.file(toPosition), Utils.rank(toPosition)];
+                for(int attacker=0; attacker < alternates.Length / 3; ++attacker) {
+                    if(alternates[attacker*3] != moverColor)
+                        continue;
+                    
+                    string alternatePosition = alternates.Substring(attacker*3 + 1, 2);
+                    if(alternatePosition.Equals(fromPosition))
+                        continue;
+                    string alternateAttacker = pieceAt(alternatePosition);
+                    if(!Utils.validPiece(alternateAttacker) || Utils.pieceType(alternateAttacker) != moverType)
+                        continue;
+
+                    Debug.Log("Other attacker "+alternateAttacker+" exists at "+alternatePosition);
+                    alternateFiles += Utils.file(alternatePosition);
+                    alternateRanks += Utils.rank(alternatePosition);
+                    break;
+                }
+
+                if(alternateFiles.Length > 0) // other attacker of same type exists
+                    if(alternateFiles.Contains("" + fromPosition[0])) {
+                        if(alternateRanks.Contains("" + fromPosition[1])) // neither file nor rank unique
+                            pgnMove += fromPosition;
+                        else // rank is unique
+                            pgnMove += fromPosition[1];
+                    } else // file is unique
+                        pgnMove += fromPosition[0];
+            }
+
+            pgnMove += toPosition;
+            PGN.Add(pgnMove);
+        }
+
         List<string> oldAttacks, newAttacks;
-        if(moverType == 'k') { // king
+        if(moverType == 'K') { // king
             if(attackingPosition(!moverWhite, toPosition))
                 return false;
 
             oldAttacks = Utils.getKingAttacksFrom(fromPosition);
             newAttacks = Utils.getKingAttacksFrom(toPosition);
         }
-        else if(moverType == 'q') { // queen
+        else if(moverType == 'Q') { // queen
             oldAttacks = Utils.getQueenAttacksFrom(this, moverWhite, fromPosition);
             newAttacks = Utils.getQueenAttacksFrom(this, moverWhite, toPosition);
         }
-        else if(moverType == 'r') { // rook
+        else if(moverType == 'R') { // rook
             oldAttacks = Utils.getRookAttacksFrom(this, moverWhite, fromPosition);
             newAttacks = Utils.getRookAttacksFrom(this, moverWhite, toPosition);
         }
-        else if(moverType == 'n') { // knight
+        else if(moverType == 'N') { // knight
             oldAttacks = Utils.getKnightAttacksFrom(fromPosition);
             newAttacks = Utils.getKnightAttacksFrom(toPosition);
         }
-        else if(moverType == 'b') { // bishop
+        else if(moverType == 'B') { // bishop
             oldAttacks = Utils.getBishopAttacksFrom(this, moverWhite, fromPosition);
             newAttacks = Utils.getBishopAttacksFrom(this, moverWhite, toPosition);
         }
-        else { // if(moverType == 'p') // pawn
+        else { // if(moverType == 'P') // pawn
             oldAttacks = Utils.getPawnAttacksFrom(moverWhite, fromPosition);
             newAttacks = Utils.getPawnAttacksFrom(moverWhite, toPosition);
         }
@@ -126,7 +176,7 @@ public class Board : MonoBehaviour {
         if(!Utils.validPosition(position))
             return false;
         int file=Utils.file(position), rank=Utils.rank(position);
-        char color = attackerIsWhite? 'w':'b';
+        char color = attackerIsWhite? 'w':'B';
         string attackers = attackersOf[file,rank];
         if(attackers is null) attackersOf[file,rank] = "";
         for(int atkPce=0; atkPce < attackers.Length / 3; ++atkPce) {
@@ -182,7 +232,7 @@ public class Board : MonoBehaviour {
 
         for(int piece=0; piece < attackers.Length / 3; ++piece) {
             char color = attackers[piece * 3];
-            if(color == (white? 'w':'b'))
+            if(color == (white? 'w':'B'))
                 return true;
         }
         return false;

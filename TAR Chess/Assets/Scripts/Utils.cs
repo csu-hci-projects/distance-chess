@@ -8,7 +8,7 @@ public class Utils : MonoBehaviour
     public static int numPiecesUpdated = 0;
     public static float moveTime = 0.1f;
     public static List<string> pins;
-    public const string FILE = "ABCDEFGH";
+    public const string FILE = "abcdefgh";
     public const string RANK = "12345678";
     public static Vector3 NULL_COORDS = new Vector3(-1,-1,-1);
     public static Dictionary<bool, string> kingPosition = new Dictionary<bool, string>();
@@ -20,7 +20,7 @@ public class Utils : MonoBehaviour
     public static bool validPosition(string position) {
         return !(position is null) && position.Length == 2 && file(position) != -1 && rank(position) != -1;
     }
-    public static int file(string position) { return FILE.IndexOf(Char.ToUpper(position[0])); }
+    public static int file(string position) { return FILE.IndexOf(Char.ToLower(position[0])); }
     public static int rank(string position) { return RANK.IndexOf(position[1]); }
 
     public static string positionFrom(string position, int fileDistance, int rankDistance) {
@@ -30,14 +30,14 @@ public class Utils : MonoBehaviour
     }
 
     public static string piece(bool white, char type) {
-        return (white? "w":"b") + type;
+        return (white? "w":"b") + char.ToUpper(type);
     }
     public static bool validPiece(string piece) {
         if(piece is null || piece.Length != 2)
             return false;
         if(!"wb".Contains("" + piece[0]))
             return false;
-        if(!"pkqrnb".Contains("" + piece[1]))
+        if(!"PKQRNB".Contains("" + piece[1]))
             return false;
 
         return true;
