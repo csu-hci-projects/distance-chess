@@ -105,6 +105,7 @@ public class Board : MonoBehaviour {
         put(null, fromPosition);
         put(movingPiece, toPosition);
         whitesMove = !whitesMove;
+        moveToMake = null;
         return true;
     }
         private List<string> getAttacks(char moverType, bool moverWhite, string position) {

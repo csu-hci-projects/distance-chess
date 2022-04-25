@@ -348,4 +348,12 @@ public class Utils : MonoBehaviour
         
         return null;
     }
+    public static string knightMoveFromPGN(string pgnMove) {
+        if(pgnMove is null) return null;
+        if(pgnMove.Length < 3) return null;
+
+        if(!pgnMove.Contains("N")) return null;
+
+        return pgnMove.Substring(pgnMove.Length - 2);
+    }
 }

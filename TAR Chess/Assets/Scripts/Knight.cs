@@ -18,6 +18,9 @@ public class Knight : MonoBehaviour {
     }
 
     void Update() {
+        movePosition = Utils.knightMoveFromPGN(board.moveToMake);
+        if(!(movePosition is null) && (white != board.whitesMove || !possibleMoves.Contains(movePosition)))
+            movePosition = null;
         if(board.needsUpdate(position)) {
             updatePossibleMoves();
             pin = Utils.getPin(board.pins, pin);
