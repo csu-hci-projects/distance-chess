@@ -335,4 +335,17 @@ public class Utils : MonoBehaviour
         }
         return null;
     }
+
+    public static string pawnMoveFromPGN(string pgnMove) {
+        if(pgnMove is null) 
+            return null;
+        if(pgnMove.Length < 2)
+            return null;
+        if(validPosition(pgnMove))
+            return pgnMove;
+        if(pgnMove[1] == 'x')
+            return pgnMove.Substring(2);
+        
+        return null;
+    }
 }

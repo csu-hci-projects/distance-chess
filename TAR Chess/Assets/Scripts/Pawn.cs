@@ -6,11 +6,11 @@ public class Pawn : MonoBehaviour {
     public Board board;
     public bool white, alive;
     public string position, movePosition;
-    public string[] possibleMoves;
+    public List<string> possibleMoves = new List<string>(4);
     public string pin;
 
     void Start() {
-        possibleMoves = new string[4];
+        for(int i=0; i<4; ++i) possibleMoves.Add(null);
         pin = null;
         transform.localPosition = Utils.getLocalCoordsFromPosition(position);
         board.put(Utils.piece(white, 'p'), position);
@@ -20,6 +20,9 @@ public class Pawn : MonoBehaviour {
     }
 
     void Update() {
+        movePosition = Utils.pawnMoveFromPGN(board.moveToMake);
+        if(!possibleMoves.Contains(movePosition) || board.whitesMove != white)
+            movePosition = null;
         if(board.needsUpdate(position)) {
             pin = Utils.getPin(board.pins, position);
             // update the pawn's moveset

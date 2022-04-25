@@ -10,6 +10,7 @@ public class Board : MonoBehaviour {
     public string check = "";
     public List<string> PGN = new List<string>();
     public string moveToMake = "";
+    public bool whitesMove = true;
     public List<string> pins;
     void Start() {
         pins = new List<string>();
@@ -83,7 +84,7 @@ public class Board : MonoBehaviour {
         bool moverWhite = Utils.pieceIsWhite(movingPiece);
         char moverType = Utils.pieceType(movingPiece);
 
-        if((PGN.Count % 2 == 0) != moverWhite)
+        if(whitesMove != moverWhite)
             return false;
         else addPgnMove(movingPiece, fromPosition, toPosition);
 
@@ -103,6 +104,7 @@ public class Board : MonoBehaviour {
 
         put(null, fromPosition);
         put(movingPiece, toPosition);
+        whitesMove = !whitesMove;
         return true;
     }
         private List<string> getAttacks(char moverType, bool moverWhite, string position) {
