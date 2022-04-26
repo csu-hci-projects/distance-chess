@@ -177,6 +177,52 @@ public class Utils : MonoBehaviour
         transform.localPosition = moveTowards(transform, movePosition);
         return false;
     }
+    public static bool updateMove(Rook rook) { return updateMove(rook, null); }
+    public static bool updateMove(King king) { return updateMove(null, king); }
+    private static bool updateMove(Rook rook, King king) {
+        bool isRook = king is null;
+        float speed = isRook ? _MOVE_rookSpeed : _MOVE_kingSpeed;
+        Vector3 coords = isRook ? _MOVE_rookCoords : _MOVE_kingCoords;
+        Transform transform = isRook ? rook.transform : king.transform;
+        string position = isRook ? rook.position : king.position;
+        string movePos = isRook ? rook.movePosition : king.movePosition;
+        Board board = isRook ? rook.board : king.board;
+
+        if(!validPosition(movePos)) return false;
+
+        bool completedMove = false;
+
+        if(speed == -1f) {
+            coords = getLocalCoordsFromPosition(movePos);
+            speed = Vector3.Distance(
+                transform.localPosition, coords
+            ) / moveTime;
+        }
+        if(Vector3.Distance(transform.localPosition, coords) < 0.001f) {
+            speed = -1f;
+            board.movePiece(position, movePos);
+            transform.localPosition = getLocalCoordsFromPosition(movePos);
+            completedMove = true;
+        } else {
+            transform.localPosition = Vector3.MoveTowards(
+                transform.localPosition,
+                coords,
+                speed * Time.deltaTime
+            );
+        }
+        
+        if(isRook) {
+            _MOVE_rookSpeed = speed;
+            _MOVE_rookCoords = coords;
+        } else {
+            _MOVE_kingSpeed = speed;
+            _MOVE_kingCoords = coords;
+        }
+
+        return completedMove;
+    }
+        private static float _MOVE_rookSpeed = -1f, _MOVE_kingSpeed = -1f;
+        private static Vector3 _MOVE_rookCoords = NULL_COORDS, _MOVE_kingCoords = NULL_COORDS;
 
     public static List<string> getKingAttacksFrom(string position) {
         List<string> attacks = new List<string>();

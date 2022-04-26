@@ -40,7 +40,7 @@ public class Rook : MonoBehaviour {
             updatePossibleMoves();
         }
         
-        if(Utils.updateMove(board, transform, position, movePosition)) {
+        if(Utils.updateMove(this)) {
             position = Utils.position(Utils.file(movePosition), Utils.rank(movePosition));
             firstMove = false;
             movePosition = null;
