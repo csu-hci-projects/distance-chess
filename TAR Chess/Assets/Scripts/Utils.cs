@@ -338,10 +338,9 @@ public class Utils : MonoBehaviour
 
     public static string cleanPGN(string pgnMove) {
         if(pgnMove is null) return null;
-        string res = pgnMove;
-        res.Replace("x", "");
-        res.Replace("+", "");
-        res.Replace("#", "");
+        string res = pgnMove.Replace("x", "");
+        res = res.Replace("+", "");
+        res = res.Replace("#", "");
         return res;
     }
     private static bool PGN_tooShort(string pgnMove, int minLength) {
@@ -364,7 +363,7 @@ public class Utils : MonoBehaviour
 
         move = move.Substring(move.Length - 2);
         if(!validPosition(move)) return null;
-        else return move;
+        return move;
     }
     public static string bishopMoveFromPGN(string pgnMove) {
         string move = cleanPGN(pgnMove);
@@ -374,25 +373,26 @@ public class Utils : MonoBehaviour
 
         move = move.Substring(move.Length - 2);
         if(!validPosition(move)) return null;
-        else return move;
+        return move;
     }
 
     public static string validateMovePosition(string movePosition, bool white, Board board, List<string> possibleMoves, string position, string pieceType) {
         if(white != board.whitesMove)
             return null;
-        else if(!possibleMoves.Contains(movePosition))
+        if(!possibleMoves.Contains(movePosition)) 
             return null;
-        else {
-            string move = Utils.cleanPGN(board.moveToMake);
-            move.Replace("B", "");
-            if(move.Length == 3) {
-                if(move[0] != position[0] && move[0] != position[1])
-                    return null;
-            } else if(move.Length == 4) {
-                if(!move.Substring(0,2).Equals(position))
-                    return null;
-            }
+
+        string move = Utils.cleanPGN(board.moveToMake);
+        move = move.Replace(pieceType, "");
+
+        if(move.Length == 3) {
+            if(move[0] != position[0] && move[0] != position[1])
+                return null;
+        } else if(move.Length == 4) {
+            if(!move.Substring(0,2).Equals(position))
+                return null;
         }
+        
         return movePosition;
     }
 }

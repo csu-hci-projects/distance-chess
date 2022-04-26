@@ -136,6 +136,7 @@ public class Board : MonoBehaviour {
 
                 string alternateFiles = "", alternateRanks = "";
                 string alternates = attackersOf[Utils.file(toPosition), Utils.rank(toPosition)];
+                if(alternates is null) alternates = "";
                 for(int attacker=0; attacker < alternates.Length / 3; ++attacker) {
                     if(alternates[attacker*3] != moverColor)
                         continue;
