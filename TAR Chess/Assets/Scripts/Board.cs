@@ -7,10 +7,10 @@ public class Board : MonoBehaviour {
     public bool[,] tilesToUpdate = new bool[8,8];
     public string[,] attackersOf = new string[8,8];
     public Dictionary<bool, string> kingPosition = new Dictionary<bool, string>();
-    public string check = "";
-    public List<string> PGN = new List<string>();
-    public string moveToMake = "";
     public bool whitesMove = true;
+    public string check = "";
+    public string moveToMake = "";
+    public List<string> PGN = new List<string>();
     public List<string> pins;
     void Start() {
         pins = new List<string>();
@@ -93,9 +93,14 @@ public class Board : MonoBehaviour {
                 return false;
         }
 
+        string capturedPiece = pieceAt(toPosition);
+        if(Utils.validPiece(capturedPiece)) // then
+        foreach(string attack in getAttacks(capturedPiece, toPosition))
+            removeAttacker(Utils.pieceIsWhite(capturedPiece), attack, toPosition);
+
         // now we update the attacks on all affected positions
         foreach(string attack in getAttacks(moverType, moverWhite, fromPosition))
-            removeAttacker(attack, fromPosition);
+            removeAttacker(moverWhite, attack, fromPosition);
         foreach(string attack in getAttacks(moverType, moverWhite, toPosition))
             addAttacker(moverWhite, attack, toPosition);
 
@@ -108,6 +113,9 @@ public class Board : MonoBehaviour {
         moveToMake = null;
         return true;
     }
+        private List<string> getAttacks(string piece, string position) {
+            return getAttacks(Utils.pieceType(piece), Utils.pieceIsWhite(piece), position);
+        }
         private List<string> getAttacks(char moverType, bool moverWhite, string position) {
             if(moverType == 'K') // king
                 return Utils.getKingAttacksFrom(position);
@@ -203,7 +211,7 @@ public class Board : MonoBehaviour {
         if(!(otherKing is null) && otherKing.Equals(attackedPosition))
             check = (!white? "w":"b") + attackingPosition;
     }
-    public void removeAttacker(string attackedPosition, string attackingPosition) {
+    public void removeAttacker(bool white, string attackedPosition, string attackingPosition) {
         // check for valid positions
         if (!Utils.validPosition(attackedPosition) || !Utils.validPosition(attackingPosition))
             return;
@@ -215,6 +223,10 @@ public class Board : MonoBehaviour {
         
         attackersOf[file,rank] = attackersOf[file,rank].Replace("w"+attackingPosition, "");
         attackersOf[file,rank] = attackersOf[file,rank].Replace("b"+attackingPosition, "");
+
+        string otherKing = kingPosition[!white];
+        if(!(otherKing is null) && otherKing.Equals(attackedPosition))
+            check = check.Replace((!white? "w":"b") + attackingPosition, "");
     }
     public bool isAttackedBy(bool white, string position) {
         if(!Utils.validPosition(position))

@@ -7,7 +7,8 @@ public class King : MonoBehaviour {
     public bool white;
     public string position, movePosition=null;
     public string[] possibleMoves = new string[10];
-    public bool firstMove = true, kingsRookMoved = false, queensRookMoved = false;
+    public bool firstMove = true;
+    public Rook kingsRook, queensRook;
     public bool isInCheck = false;
 
     void Start() {
@@ -18,16 +19,22 @@ public class King : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        movePosition = Utils.kingMoveFromPGN(board.moveToMake, this);
+        if(!(movePosition is null))
+            if(white != board.whitesMove)
+                movePosition = null;
+
         if(board.needsUpdate(position)) {
             isInCheck = board.check.Contains(white? "w":"b");
             updatePossibleMoves();
         }
         
-        if(Utils.updateMove(board, transform, position, movePosition)) {
+        if(Utils.updateMove(this)) {
             position = Utils.position(Utils.file(movePosition), Utils.rank(movePosition));
             movePosition = null;
             firstMove = false;
-        }
+        } else if(!(movePosition is null))
+            Debug.Log("Still not returning true...");
     }
 
     public void updatePossibleMoves() {
@@ -67,7 +74,7 @@ public class King : MonoBehaviour {
             }
             
             // here, there is a piece in the move position
-            if(Utils.pieceIsWhite(piece) ^ white) { // if the piece is the other color
+            if(Utils.pieceIsWhite(piece) != white) { // if the piece is the other color
                 bool guarded = board.isAttackedBy(!white, movePosition);
                 if(guarded) { // and it is guarded, it's an illegal move
                     possibleMoves[i] = null;
@@ -88,15 +95,15 @@ public class King : MonoBehaviour {
         if(!queenside)
             possibleMoves[9] = null;
     }
-    private bool canCastle(bool kingside) {
+    public bool canCastle(bool kingside) {
         // king cannot castle while in check
         if(isInCheck)
             return false;
         
         // if rook has moved, castling is illegal
-        if(kingsRookMoved && kingside)
+        if(!kingsRook.firstMove && kingside)
             return false;
-        if(queensRookMoved && !kingside)
+        if(!queensRook.firstMove && !kingside)
             return false;
 
         // first check checks: king cannot castle across or into check

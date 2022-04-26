@@ -177,6 +177,82 @@ public class Utils : MonoBehaviour
         transform.localPosition = moveTowards(transform, movePosition);
         return false;
     }
+    public static bool updateMove(King king) {
+        if(!validPosition(king.movePosition))
+            return false;
+        string pgn = cleanPGN(king.board.moveToMake);
+        Rook rook = null;
+        string pos ="";
+        string rpos = "";
+        bool rdone = false;
+        
+        if(pgn.Equals("o o")) {
+            rook = king.kingsRook;
+            pos = king.white? "g1":"g8";
+            rpos = king.white? "f1":"f8";
+        } else if(pgn.Equals("ooo")) {
+            rook = king.queensRook;
+            pos = king.white? "c1":"c8";
+            rpos = king.white? "d1":"d8";
+        } else {
+            return updateMove(king.board, king.transform, king.position, king.movePosition);
+        }
+
+        Debug.Log("For move "+pgn+", king moving to "+pos);
+
+        rdone = updateMove(rook.board, rook.transform, rook.position, rpos);
+
+        if(pieceAt(king, pos) && rdone) {
+            king.board.movePiece(king.position, pos);
+
+            // ensure the double-call of board.movePiece doesn't mess up the move order
+            king.board.whitesMove = !king.white;
+
+            king.transform.localPosition = getLocalCoordsFromPosition(pos);
+            
+            rook.position = position(file(rpos), rank(rpos));
+            rook.firstMove = false;
+            rook.movePosition = null;
+
+            king.updatePossibleMoves();
+            rook.updatePossibleMoves();
+            
+            return true;
+        }
+
+        king.transform.localPosition = moveTowards(king, pos);
+
+        return false;
+    }
+        private static bool pieceAt(King king, string position) {
+        if(_CASTLE_position is null) {
+            _CASTLE_position = position;
+            _CASTLE_coords = getLocalCoordsFromPosition(position);
+        }
+        if(Vector3.Distance(king.transform.localPosition, _CASTLE_coords) < 0.001f) {
+            _CASTLE_position = null;
+            _MOVE_speed = -1f;
+            return true;
+        }
+        return false;
+        }
+        private static Vector3 moveTowards(King king, string position) {
+        if(_CASTLE_position is null || _CASTLE_position.Length == 0) {
+            _CASTLE_position = position;
+            _CASTLE_coords = getLocalCoordsFromPosition(position);
+        }
+        if(_CASTLE_speed == -1f) {
+            _CASTLE_speed = Vector3.Distance(king.transform.localPosition, _CASTLE_coords) / moveTime;
+        }
+        return Vector3.MoveTowards(
+            king.transform.localPosition,
+            _CASTLE_coords,
+            _CASTLE_speed * Time.deltaTime
+        );
+        }
+        private static string _CASTLE_position = null;
+        private static float _CASTLE_speed = -1f;
+        private static Vector3 _CASTLE_coords;
 
     public static List<string> getKingAttacksFrom(string position) {
         List<string> attacks = new List<string>();
@@ -338,6 +414,8 @@ public class Utils : MonoBehaviour
 
     public static string cleanPGN(string pgnMove) {
         if(pgnMove is null) return null;
+        if(pgnMove.Contains("ooo")) return "ooo";
+        if(pgnMove.Contains("o o")) return "o o";
         string res = pgnMove.Replace("x", "");
         res = res.Replace("+", "");
         res = res.Replace("#", "");
@@ -365,6 +443,36 @@ public class Utils : MonoBehaviour
         if(!validPosition(move)) return null;
         return move;
     }
+    public static string kingMoveFromPGN(string pgnMove, King king) {
+        string move = cleanPGN(pgnMove);
+        if(PGN_tooShort(move, 3)) return null;
+
+        if(move.Equals("o o")) { // short castle (kingside)
+            return king.white? "g1":"g8";
+        }
+        if(move.Equals("ooo")) { // long castle (queenside)
+            return king.white? "c1":"c8";
+        }
+
+        return backPieceMoveFromPGN(move, "K");
+    }
+    public static string rookMoveFromPGN(string pgnMove, Rook rook) {
+        string move = cleanPGN(pgnMove);
+        if(PGN_tooShort(move, 3)) return null;
+
+        if(move.Equals("o o")) {
+            if(!rook.kingside)
+                return null;
+            return rook.white? "f1":"f8";
+        }
+        if(move.Equals("ooo")) {
+            if(rook.kingside)
+                return null;
+            return rook.white? "d1":"d8";
+        }
+
+        return backPieceMoveFromPGN(move, "R");
+    }
 
     public static string validateMovePosition(string movePosition, bool white, Board board, List<string> possibleMoves, string position, string pieceType) {
         if(white != board.whitesMove)
@@ -374,6 +482,10 @@ public class Utils : MonoBehaviour
 
         string move = Utils.cleanPGN(board.moveToMake);
         move = move.Replace(pieceType, "");
+        if(move.Contains("o")) {
+            if(!pieceType.Equals("R")) return null;
+            else return movePosition;
+        }
 
         if(move.Length == 3) {
             if(move[0] != position[0] && move[0] != position[1])

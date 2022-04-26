@@ -4,9 +4,13 @@ using UnityEngine;
 
 public class Rook : MonoBehaviour {
     public Board board;
+    public King king;
     public bool white;
     public string position, movePosition, pin = null;
     public List<string> possibleMoves = new List<string>();
+
+    public bool kingside;
+    public bool firstMove = true;
 
     void Start() {
         board.put(Utils.piece(white, 'r'), position);
@@ -14,25 +18,28 @@ public class Rook : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        movePosition = Utils.backPieceMoveFromPGN(board.moveToMake, "R");
-        if(!(movePosition is null))
-            movePosition = Utils.validateMovePosition(
-                movePosition, white, board, possibleMoves, position, "R"
-            );
-
         if(board.needsUpdate(position)) {
-            if(Utils.pieceColor(board.pieceAt(position)) != (white? 'w':'b'))
+            string newPiece = board.pieceAt(position);
+            if(!(newPiece is null) && Utils.pieceColor(board.pieceAt(position)) != (white? 'w':'b'))
                 gameObject.SetActive(false);
             updatePossibleMoves();
         }
         
+        movePosition = Utils.backPieceMoveFromPGN(board.moveToMake, "R");
+        if(!(movePosition is null)) {
+            movePosition = Utils.validateMovePosition(
+                movePosition, white, board, possibleMoves, position, "R"
+            );
+        }
+
         if(Utils.updateMove(board, transform, position, movePosition)) {
             position = Utils.position(Utils.file(movePosition), Utils.rank(movePosition));
+            firstMove = false;
             movePosition = null;
         }
     }
 
-    void updatePossibleMoves() {
+    public void updatePossibleMoves() {
         possibleMoves = Utils.getRookAttacksFrom(board, white, position);
         List<string> illegalMoves = new List<string>();
         foreach(string move in possibleMoves) {

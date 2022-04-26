@@ -121,8 +121,8 @@ public class Pawn : MonoBehaviour {
         string piece = board.pieceAt(move);
         if(!Utils.validPiece(piece)) // false if there is no piece at move position
             return false;
-        else // true if piece on tile has opposite color (logical xor operator `^`)
-            return Utils.pieceIsWhite(piece) ^ white;
+        else // true if piece on tile has opposite color
+            return Utils.pieceIsWhite(piece) != white;
     }
 
     private void forbidMove(int index) {
