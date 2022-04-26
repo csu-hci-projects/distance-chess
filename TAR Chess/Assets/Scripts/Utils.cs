@@ -177,53 +177,82 @@ public class Utils : MonoBehaviour
         transform.localPosition = moveTowards(transform, movePosition);
         return false;
     }
-    public static bool updateMove(Rook rook) { return updateMove(rook, null); }
-    public static bool updateMove(King king) { return updateMove(null, king); }
-    private static bool updateMove(Rook rook, King king) {
-        bool isRook = king is null;
-        float speed = isRook ? _MOVE_rookSpeed : _MOVE_kingSpeed;
-        Vector3 coords = isRook ? _MOVE_rookCoords : _MOVE_kingCoords;
-        Transform transform = isRook ? rook.transform : king.transform;
-        string position = isRook ? rook.position : king.position;
-        string movePos = isRook ? rook.movePosition : king.movePosition;
-        Board board = isRook ? rook.board : king.board;
-
-        if(!validPosition(movePos)) return false;
-
-        bool completedMove = false;
-
-        if(speed == -1f) {
-            coords = getLocalCoordsFromPosition(movePos);
-            speed = Vector3.Distance(
-                transform.localPosition, coords
-            ) / moveTime;
-        }
-        if(Vector3.Distance(transform.localPosition, coords) < 0.001f) {
-            speed = -1f;
-            board.movePiece(position, movePos);
-            board.whitesMove = !(isRook? rook.white:king.white);
-            transform.localPosition = getLocalCoordsFromPosition(movePos);
-            completedMove = true;
-        } else {
-            transform.localPosition = Vector3.MoveTowards(
-                transform.localPosition,
-                coords,
-                speed * Time.deltaTime
-            );
-        }
+    public static bool updateMove(King king) {
+        if(!validPosition(king.movePosition))
+            return false;
+        string pgn = cleanPGN(king.board.moveToMake);
+        Rook rook = null;
+        string pos ="";
+        string rpos = "";
+        bool rdone = false;
         
-        if(isRook) {
-            _MOVE_rookSpeed = speed;
-            _MOVE_rookCoords = coords;
+        if(pgn.Equals("o o")) {
+            rook = king.kingsRook;
+            pos = king.white? "g1":"g8";
+            rpos = king.white? "f1":"f8";
+        } else if(pgn.Equals("ooo")) {
+            rook = king.queensRook;
+            pos = king.white? "c1":"c8";
+            rpos = king.white? "d1":"d8";
         } else {
-            _MOVE_kingSpeed = speed;
-            _MOVE_kingCoords = coords;
+            return updateMove(king.board, king.transform, king.position, king.movePosition);
         }
 
-        return completedMove;
+        Debug.Log("For move "+pgn+", king moving to "+pos);
+
+        rdone = updateMove(rook.board, rook.transform, rook.position, rpos);
+
+        if(pieceAt(king, pos) && rdone) {
+            king.board.movePiece(king.position, pos);
+
+            // ensure the double-call of board.movePiece doesn't mess up the move order
+            king.board.whitesMove = !king.white;
+
+            king.transform.localPosition = getLocalCoordsFromPosition(pos);
+            
+            rook.position = position(file(rpos), rank(rpos));
+            rook.firstMove = false;
+            rook.movePosition = null;
+
+            king.updatePossibleMoves();
+            rook.updatePossibleMoves();
+            
+            return true;
+        }
+
+        king.transform.localPosition = moveTowards(king, pos);
+
+        return false;
     }
-        private static float _MOVE_rookSpeed = -1f, _MOVE_kingSpeed = -1f;
-        private static Vector3 _MOVE_rookCoords = NULL_COORDS, _MOVE_kingCoords = NULL_COORDS;
+        private static bool pieceAt(King king, string position) {
+        if(_CASTLE_position is null) {
+            _CASTLE_position = position;
+            _CASTLE_coords = getLocalCoordsFromPosition(position);
+        }
+        if(Vector3.Distance(king.transform.localPosition, _CASTLE_coords) < 0.001f) {
+            _CASTLE_position = null;
+            _MOVE_speed = -1f;
+            return true;
+        }
+        return false;
+        }
+        private static Vector3 moveTowards(King king, string position) {
+        if(_CASTLE_position is null || _CASTLE_position.Length == 0) {
+            _CASTLE_position = position;
+            _CASTLE_coords = getLocalCoordsFromPosition(position);
+        }
+        if(_CASTLE_speed == -1f) {
+            _CASTLE_speed = Vector3.Distance(king.transform.localPosition, _CASTLE_coords) / moveTime;
+        }
+        return Vector3.MoveTowards(
+            king.transform.localPosition,
+            _CASTLE_coords,
+            _CASTLE_speed * Time.deltaTime
+        );
+        }
+        private static string _CASTLE_position = null;
+        private static float _CASTLE_speed = -1f;
+        private static Vector3 _CASTLE_coords;
 
     public static List<string> getKingAttacksFrom(string position) {
         List<string> attacks = new List<string>();

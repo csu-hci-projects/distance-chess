@@ -33,7 +33,8 @@ public class King : MonoBehaviour {
             position = Utils.position(Utils.file(movePosition), Utils.rank(movePosition));
             movePosition = null;
             firstMove = false;
-        }
+        } else if(!(movePosition is null))
+            Debug.Log("Still not returning true...");
     }
 
     public void updatePossibleMoves() {

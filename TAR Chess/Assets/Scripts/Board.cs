@@ -94,9 +94,9 @@ public class Board : MonoBehaviour {
         }
 
         string capturedPiece = pieceAt(toPosition);
-        foreach(string attack in getAttacks(Utils.pieceType(capturedPiece), Utils.pieceIsWhite(capturedPiece), toPosition)) {
+        if(Utils.validPiece(capturedPiece)) // then
+        foreach(string attack in getAttacks(capturedPiece, toPosition))
             removeAttacker(Utils.pieceIsWhite(capturedPiece), attack, toPosition);
-        }
 
         // now we update the attacks on all affected positions
         foreach(string attack in getAttacks(moverType, moverWhite, fromPosition))
@@ -113,6 +113,9 @@ public class Board : MonoBehaviour {
         moveToMake = null;
         return true;
     }
+        private List<string> getAttacks(string piece, string position) {
+            return getAttacks(Utils.pieceType(piece), Utils.pieceIsWhite(piece), position);
+        }
         private List<string> getAttacks(char moverType, bool moverWhite, string position) {
             if(moverType == 'K') // king
                 return Utils.getKingAttacksFrom(position);
