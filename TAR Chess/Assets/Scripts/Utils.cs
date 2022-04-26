@@ -201,6 +201,7 @@ public class Utils : MonoBehaviour
         if(Vector3.Distance(transform.localPosition, coords) < 0.001f) {
             speed = -1f;
             board.movePiece(position, movePos);
+            board.whitesMove = !(isRook? rook.white:king.white);
             transform.localPosition = getLocalCoordsFromPosition(movePos);
             completedMove = true;
         } else {

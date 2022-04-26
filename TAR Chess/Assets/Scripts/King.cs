@@ -73,7 +73,7 @@ public class King : MonoBehaviour {
             }
             
             // here, there is a piece in the move position
-            if(Utils.pieceIsWhite(piece) ^ white) { // if the piece is the other color
+            if(Utils.pieceIsWhite(piece) != white) { // if the piece is the other color
                 bool guarded = board.isAttackedBy(!white, movePosition);
                 if(guarded) { // and it is guarded, it's an illegal move
                     possibleMoves[i] = null;

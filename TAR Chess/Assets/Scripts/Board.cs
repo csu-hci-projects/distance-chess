@@ -93,9 +93,14 @@ public class Board : MonoBehaviour {
                 return false;
         }
 
+        string capturedPiece = pieceAt(toPosition);
+        foreach(string attack in getAttacks(Utils.pieceType(capturedPiece), Utils.pieceIsWhite(capturedPiece), toPosition)) {
+            removeAttacker(Utils.pieceIsWhite(capturedPiece), attack, toPosition);
+        }
+
         // now we update the attacks on all affected positions
         foreach(string attack in getAttacks(moverType, moverWhite, fromPosition))
-            removeAttacker(attack, fromPosition);
+            removeAttacker(moverWhite, attack, fromPosition);
         foreach(string attack in getAttacks(moverType, moverWhite, toPosition))
             addAttacker(moverWhite, attack, toPosition);
 
@@ -203,7 +208,7 @@ public class Board : MonoBehaviour {
         if(!(otherKing is null) && otherKing.Equals(attackedPosition))
             check = (!white? "w":"b") + attackingPosition;
     }
-    public void removeAttacker(string attackedPosition, string attackingPosition) {
+    public void removeAttacker(bool white, string attackedPosition, string attackingPosition) {
         // check for valid positions
         if (!Utils.validPosition(attackedPosition) || !Utils.validPosition(attackingPosition))
             return;
@@ -215,6 +220,10 @@ public class Board : MonoBehaviour {
         
         attackersOf[file,rank] = attackersOf[file,rank].Replace("w"+attackingPosition, "");
         attackersOf[file,rank] = attackersOf[file,rank].Replace("b"+attackingPosition, "");
+
+        string otherKing = kingPosition[!white];
+        if(!(otherKing is null) && otherKing.Equals(attackedPosition))
+            check = check.Replace((!white? "w":"b") + attackingPosition, "");
     }
     public bool isAttackedBy(bool white, string position) {
         if(!Utils.validPosition(position))
