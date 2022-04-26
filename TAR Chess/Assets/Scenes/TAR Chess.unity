@@ -2913,6 +2913,11 @@ PrefabInstance:
       objectReference: {fileID: 2078483188}
     - target: {fileID: 6339815992645523349, guid: 29072c58f78a447e09e9ca55596cf76f,
         type: 3}
+      propertyPath: kingside
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6339815992645523349, guid: 29072c58f78a447e09e9ca55596cf76f,
+        type: 3}
       propertyPath: position
       value: h1
       objectReference: {fileID: 0}
@@ -3063,6 +3068,11 @@ PrefabInstance:
       propertyPath: board
       value: 
       objectReference: {fileID: 2078483188}
+    - target: {fileID: -9024452402761313129, guid: 56902b3aa76d64d758516d63a16b2014,
+        type: 3}
+      propertyPath: kingside
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: -9024452402761313129, guid: 56902b3aa76d64d758516d63a16b2014,
         type: 3}
       propertyPath: position
@@ -3525,9 +3535,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7534aa3fef31a0b4f8b1e62fd44a0fbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  whitesMove: 1
   check: 
-  PGN: []
   moveToMake: 
+  PGN: []
   pins: []
 --- !u!114 &2078483189
 MonoBehaviour:

@@ -7,10 +7,10 @@ public class Board : MonoBehaviour {
     public bool[,] tilesToUpdate = new bool[8,8];
     public string[,] attackersOf = new string[8,8];
     public Dictionary<bool, string> kingPosition = new Dictionary<bool, string>();
-    public string check = "";
-    public List<string> PGN = new List<string>();
-    public string moveToMake = "";
     public bool whitesMove = true;
+    public string check = "";
+    public string moveToMake = "";
+    public List<string> PGN = new List<string>();
     public List<string> pins;
     void Start() {
         pins = new List<string>();

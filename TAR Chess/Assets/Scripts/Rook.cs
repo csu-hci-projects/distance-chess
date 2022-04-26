@@ -8,13 +8,20 @@ public class Rook : MonoBehaviour {
     public string position, movePosition, pin = null;
     public List<string> possibleMoves = new List<string>();
 
+    public bool kingside;
+    public bool firstMove = true;
+
     void Start() {
         board.put(Utils.piece(white, 'r'), position);
     }
 
     // Update is called once per frame
     void Update() {
-        movePosition = Utils.backPieceMoveFromPGN(board.moveToMake, "R");
+        movePosition = Utils.rookMoveFromPGN(board.moveToMake, this);
+        if(!(movePosition is null))
+            if(white != board.whitesMove)
+                movePosition = null;
+                
         if(!(movePosition is null))
             movePosition = Utils.validateMovePosition(
                 movePosition, white, board, possibleMoves, position, "R"

@@ -18,6 +18,11 @@ public class King : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        movePosition = Utils.kingMoveFromPGN(board.moveToMake, this);
+        if(!(movePosition is null))
+            if(white != board.whitesMove)
+                movePosition = null;
+                
         if(board.needsUpdate(position)) {
             isInCheck = board.check.Contains(white? "w":"b");
             updatePossibleMoves();

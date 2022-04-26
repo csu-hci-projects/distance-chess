@@ -365,6 +365,36 @@ public class Utils : MonoBehaviour
         if(!validPosition(move)) return null;
         return move;
     }
+    public static string kingMoveFromPGN(string pgnMove, King king) {
+        string move = cleanPGN(pgnMove);
+        if(PGN_tooShort(move, 3)) return null;
+
+        if(move.Equals("o o")) { // short castle
+            return king.white? "g1":"g8";
+        }
+        if(move.Equals("ooo")) {
+            return king.white? "c1":"c8";
+        }
+
+        return backPieceMoveFromPGN(move, "K");
+    }
+    public static string rookMoveFromPGN(string pgnMove, Rook rook) {
+        string move = cleanPGN(pgnMove);
+        if(PGN_tooShort(move, 3)) return null;
+
+        if(move.Equals("o o")) {
+            if(!rook.kingside)
+                return null;
+            else return rook.white? "f1":"f8";
+        }
+        if(move.Equals("ooo")) {
+            if(rook.kingside)
+                return null;
+            else return rook.white? "d1":"d8";
+        }
+
+        return backPieceMoveFromPGN(move, "R");
+    }
 
     public static string validateMovePosition(string movePosition, bool white, Board board, List<string> possibleMoves, string position, string pieceType) {
         if(white != board.whitesMove)
