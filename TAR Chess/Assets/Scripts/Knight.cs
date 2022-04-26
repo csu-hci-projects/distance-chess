@@ -19,26 +19,10 @@ public class Knight : MonoBehaviour {
 
     void Update() {
         movePosition = Utils.knightMoveFromPGN(board.moveToMake);
-        if(!(movePosition is null)) {
-            if((white != board.whitesMove || !possibleMoves.Contains(movePosition)))
-                movePosition = null;
-            else {
-                string move = board.moveToMake;
-                int len = move.Length;
-                if(len == 4) {
-                    if(!move.Contains("x") && move[0] != position[0] && move[0] != position[1])
-                        movePosition = null;
-                } else if(len == 5) {
-                    if(move.Contains("x")) {
-                        if(move[0] != position[0] && move[0] != position[1])
-                            movePosition = null;
-                    } else {
-                        if(!move.Substring(0,2).Equals(position))
-                            movePosition = null;
-                    }
-                }
-            }
-        }
+        if(!(movePosition is null))
+            movePosition = Utils.validateMovePosition(
+                movePosition, white, board, possibleMoves, position, "N"
+            );
 
         if(board.needsUpdate(position)) {
             updatePossibleMoves();

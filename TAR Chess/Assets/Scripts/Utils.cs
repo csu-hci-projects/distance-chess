@@ -336,7 +336,7 @@ public class Utils : MonoBehaviour
         return null;
     }
 
-    private static string cleanPGN(string pgnMove) {
+    public static string cleanPGN(string pgnMove) {
         if(pgnMove is null) return null;
         string res = pgnMove;
         res.Replace("x", "");
@@ -375,5 +375,24 @@ public class Utils : MonoBehaviour
         move = move.Substring(move.Length - 2);
         if(!validPosition(move)) return null;
         else return move;
+    }
+
+    public static string validateMovePosition(string movePosition, bool white, Board board, List<string> possibleMoves, string position, string pieceType) {
+        if(white != board.whitesMove)
+            return null;
+        else if(!possibleMoves.Contains(movePosition))
+            return null;
+        else {
+            string move = Utils.cleanPGN(board.moveToMake);
+            move.Replace("B", "");
+            if(move.Length == 3) {
+                if(move[0] != position[0] && move[0] != position[1])
+                    return null;
+            } else if(move.Length == 4) {
+                if(!move.Substring(0,2).Equals(position))
+                    return null;
+            }
+        }
+        return movePosition;
     }
 }

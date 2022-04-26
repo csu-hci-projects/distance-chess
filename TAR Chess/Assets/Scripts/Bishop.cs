@@ -16,6 +16,12 @@ public class Bishop : MonoBehaviour {
     }
 
     void Update() {
+        movePosition = Utils.bishopMoveFromPGN(board.moveToMake);
+        if(!(movePosition is null))
+            movePosition = Utils.validateMovePosition(
+                movePosition, white, board, possibleMoves, position, "B"
+            );
+
         if(board.needsUpdate(position)) {
             updatePossibleMoves();
         }
