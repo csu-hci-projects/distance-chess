@@ -55,7 +55,7 @@ This will primarily be built for iOS, but future builds could include Android.
   - [ ] stalemates
   - [ ] pins on pieces
   - [x] castling
-  - [ ] captures (in progress)
+  - [x] captures (in progress)
   - [ ] en passant captures
   - [ ] pawn promotions
 - [ ] Computer Vision (may not be implemented)
