@@ -336,24 +336,44 @@ public class Utils : MonoBehaviour
         return null;
     }
 
+    private static string cleanPGN(string pgnMove) {
+        if(pgnMove is null) return null;
+        string res = pgnMove;
+        res.Replace("x", "");
+        res.Replace("+", "");
+        res.Replace("#", "");
+        return res;
+    }
+    private static bool PGN_tooShort(string pgnMove, int minLength) {
+        return pgnMove is null || pgnMove.Length < minLength;
+    }
     public static string pawnMoveFromPGN(string pgnMove) {
-        if(pgnMove is null) 
-            return null;
-        if(pgnMove.Length < 2)
-            return null;
-        if(validPosition(pgnMove))
-            return pgnMove;
-        if(pgnMove[1] == 'x')
-            return pgnMove.Substring(2);
+        string move = cleanPGN(pgnMove);
+        if(PGN_tooShort(move, 2)) return null;
+
+        if(validPosition(move)) return move;
+        if(!FILE.Contains(""+move[0])) return null;
         
-        return null;
+        return move.Substring(1);
     }
     public static string knightMoveFromPGN(string pgnMove) {
-        if(pgnMove is null) return null;
-        if(pgnMove.Length < 3) return null;
+        string move = cleanPGN(pgnMove);
+        if(PGN_tooShort(move, 3)) return null;
 
-        if(!pgnMove.Contains("N")) return null;
+        if(!move.Contains("N")) return null;
 
-        return pgnMove.Substring(pgnMove.Length - 2);
+        move = move.Substring(move.Length - 2);
+        if(!validPosition(move)) return null;
+        else return move;
+    }
+    public static string bishopMoveFromPGN(string pgnMove) {
+        string move = cleanPGN(pgnMove);
+        if(PGN_tooShort(move, 3)) return null;
+
+        if(!move.Contains("B")) return null;
+
+        move = move.Substring(move.Length - 2);
+        if(!validPosition(move)) return null;
+        else return move;
     }
 }

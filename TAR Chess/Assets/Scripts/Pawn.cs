@@ -21,8 +21,13 @@ public class Pawn : MonoBehaviour {
 
     void Update() {
         movePosition = Utils.pawnMoveFromPGN(board.moveToMake);
-        if(!possibleMoves.Contains(movePosition) || board.whitesMove != white)
-            movePosition = null;
+        if(!(movePosition is null)) {
+            if(board.whitesMove != white || !possibleMoves.Contains(movePosition))
+                movePosition = null;
+            else if(board.moveToMake.Contains("x") && position[0] != board.moveToMake[0])
+                movePosition = null;
+        }
+
         if(board.needsUpdate(position)) {
             pin = Utils.getPin(board.pins, position);
             // update the pawn's moveset
