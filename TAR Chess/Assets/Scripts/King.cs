@@ -7,7 +7,8 @@ public class King : MonoBehaviour {
     public bool white;
     public string position, movePosition=null;
     public string[] possibleMoves = new string[10];
-    public bool firstMove = true, kingsRookMoved = false, queensRookMoved = false;
+    public bool firstMove = true;
+    public Rook kingsRook, queensRook;
     public bool isInCheck = false;
 
     void Start() {
@@ -22,7 +23,7 @@ public class King : MonoBehaviour {
         if(!(movePosition is null))
             if(white != board.whitesMove)
                 movePosition = null;
-                
+
         if(board.needsUpdate(position)) {
             isInCheck = board.check.Contains(white? "w":"b");
             updatePossibleMoves();
@@ -93,15 +94,15 @@ public class King : MonoBehaviour {
         if(!queenside)
             possibleMoves[9] = null;
     }
-    private bool canCastle(bool kingside) {
+    public bool canCastle(bool kingside) {
         // king cannot castle while in check
         if(isInCheck)
             return false;
         
         // if rook has moved, castling is illegal
-        if(kingsRookMoved && kingside)
+        if(!kingsRook.firstMove && kingside)
             return false;
-        if(queensRookMoved && !kingside)
+        if(!queensRook.firstMove && !kingside)
             return false;
 
         // first check checks: king cannot castle across or into check

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Rook : MonoBehaviour {
     public Board board;
+    public King king;
     public bool white;
     public string position, movePosition, pin = null;
     public List<string> possibleMoves = new List<string>();
@@ -18,14 +19,20 @@ public class Rook : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         movePosition = Utils.rookMoveFromPGN(board.moveToMake, this);
-        if(!(movePosition is null))
-            if(white != board.whitesMove)
-                movePosition = null;
-                
-        if(!(movePosition is null))
+        if(!(movePosition is null)) {
             movePosition = Utils.validateMovePosition(
                 movePosition, white, board, possibleMoves, position, "R"
             );
+            if(!(movePosition is null) && board.moveToMake.Contains("o")) {
+                bool concerningThisRook = board.moveToMake.Equals(
+                    (kingside? "o o":"ooo")
+                );
+                bool isALegalMove = king.canCastle(kingside);
+
+                if(!(concerningThisRook && isALegalMove))
+                    movePosition = null;
+            }
+        }
 
         if(board.needsUpdate(position)) {
             if(Utils.pieceColor(board.pieceAt(position)) != (white? 'w':'b'))
@@ -35,6 +42,7 @@ public class Rook : MonoBehaviour {
         
         if(Utils.updateMove(board, transform, position, movePosition)) {
             position = Utils.position(Utils.file(movePosition), Utils.rank(movePosition));
+            firstMove = false;
             movePosition = null;
         }
     }

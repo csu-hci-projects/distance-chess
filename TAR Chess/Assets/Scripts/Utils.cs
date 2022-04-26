@@ -338,6 +338,8 @@ public class Utils : MonoBehaviour
 
     public static string cleanPGN(string pgnMove) {
         if(pgnMove is null) return null;
+        if(pgnMove.Contains("ooo")) return "ooo";
+        if(pgnMove.Contains("o o")) return "o o";
         string res = pgnMove.Replace("x", "");
         res = res.Replace("+", "");
         res = res.Replace("#", "");
@@ -369,10 +371,10 @@ public class Utils : MonoBehaviour
         string move = cleanPGN(pgnMove);
         if(PGN_tooShort(move, 3)) return null;
 
-        if(move.Equals("o o")) { // short castle
+        if(move.Equals("o o")) { // short castle (kingside)
             return king.white? "g1":"g8";
         }
-        if(move.Equals("ooo")) {
+        if(move.Equals("ooo")) { // long castle (queenside)
             return king.white? "c1":"c8";
         }
 
@@ -385,12 +387,12 @@ public class Utils : MonoBehaviour
         if(move.Equals("o o")) {
             if(!rook.kingside)
                 return null;
-            else return rook.white? "f1":"f8";
+            return rook.white? "f1":"f8";
         }
         if(move.Equals("ooo")) {
             if(rook.kingside)
                 return null;
-            else return rook.white? "d1":"d8";
+            return rook.white? "d1":"d8";
         }
 
         return backPieceMoveFromPGN(move, "R");
@@ -404,6 +406,10 @@ public class Utils : MonoBehaviour
 
         string move = Utils.cleanPGN(board.moveToMake);
         move = move.Replace(pieceType, "");
+        if(move.Contains("o")) {
+            if(!pieceType.Equals("R")) return null;
+            else return movePosition;
+        }
 
         if(move.Length == 3) {
             if(move[0] != position[0] && move[0] != position[1])
