@@ -355,21 +355,11 @@ public class Utils : MonoBehaviour
         
         return move.Substring(1);
     }
-    public static string knightMoveFromPGN(string pgnMove) {
+    public static string backPieceMoveFromPGN(string pgnMove, string pieceType) {
         string move = cleanPGN(pgnMove);
         if(PGN_tooShort(move, 3)) return null;
 
-        if(!move.Contains("N")) return null;
-
-        move = move.Substring(move.Length - 2);
-        if(!validPosition(move)) return null;
-        return move;
-    }
-    public static string bishopMoveFromPGN(string pgnMove) {
-        string move = cleanPGN(pgnMove);
-        if(PGN_tooShort(move, 3)) return null;
-
-        if(!move.Contains("B")) return null;
+        if(!move.Contains(pieceType)) return null;
 
         move = move.Substring(move.Length - 2);
         if(!validPosition(move)) return null;
@@ -392,7 +382,7 @@ public class Utils : MonoBehaviour
             if(!move.Substring(0,2).Equals(position))
                 return null;
         }
-        
+
         return movePosition;
     }
 }

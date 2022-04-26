@@ -148,7 +148,6 @@ public class Board : MonoBehaviour {
                     if(!Utils.validPiece(alternateAttacker) || Utils.pieceType(alternateAttacker) != moverType)
                         continue;
 
-                    Debug.Log("Other attacker "+alternateAttacker+" exists at "+alternatePosition);
                     alternateFiles += Utils.file(alternatePosition);
                     alternateRanks += Utils.rank(alternatePosition);
                     break;

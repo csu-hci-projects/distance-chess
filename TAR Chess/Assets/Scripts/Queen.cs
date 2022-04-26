@@ -14,6 +14,8 @@ public class Queen : MonoBehaviour {
 
     void Update() {
         if(board.needsUpdate(position)) {
+            if(Utils.pieceColor(board.pieceAt(position)) != (white? 'w':'b'))
+                gameObject.SetActive(false);
             updatePossibleMoves();
         }
         

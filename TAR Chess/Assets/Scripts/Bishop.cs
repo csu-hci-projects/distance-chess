@@ -16,13 +16,15 @@ public class Bishop : MonoBehaviour {
     }
 
     void Update() {
-        movePosition = Utils.bishopMoveFromPGN(board.moveToMake);
+        movePosition = Utils.backPieceMoveFromPGN(board.moveToMake, "B");
         if(!(movePosition is null))
             movePosition = Utils.validateMovePosition(
                 movePosition, white, board, possibleMoves, position, "B"
             );
 
         if(board.needsUpdate(position)) {
+            if(Utils.pieceColor(board.pieceAt(position)) != (white? 'w':'b'))
+                gameObject.SetActive(false);
             updatePossibleMoves();
         }
         

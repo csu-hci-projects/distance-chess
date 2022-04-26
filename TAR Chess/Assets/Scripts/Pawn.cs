@@ -29,6 +29,8 @@ public class Pawn : MonoBehaviour {
         }
 
         if(board.needsUpdate(position)) {
+            if(Utils.pieceColor(board.pieceAt(position)) != (white? 'w':'b'))
+                gameObject.SetActive(false);
             pin = Utils.getPin(board.pins, position);
             // update the pawn's moveset
             updatePossibleMoves();
