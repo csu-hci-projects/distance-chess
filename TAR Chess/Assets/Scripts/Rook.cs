@@ -14,7 +14,15 @@ public class Rook : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        movePosition = Utils.backPieceMoveFromPGN(board.moveToMake, "R");
+        if(!(movePosition is null))
+            movePosition = Utils.validateMovePosition(
+                movePosition, white, board, possibleMoves, position, "R"
+            );
+
         if(board.needsUpdate(position)) {
+            if(Utils.pieceColor(board.pieceAt(position)) != (white? 'w':'b'))
+                gameObject.SetActive(false);
             updatePossibleMoves();
         }
         
