@@ -111,6 +111,9 @@ public class Board : MonoBehaviour {
         put(movingPiece, toPosition);
         whitesMove = !whitesMove;
         moveToMake = null;
+        if(!firstMoveEnPassant)
+            enPassantPosition = null;
+        else firstMoveEnPassant = false;
         return true;
     }
         private List<string> getAttacks(string piece, string position) {
@@ -243,5 +246,53 @@ public class Board : MonoBehaviour {
                 return true;
         }
         return false;
+    }
+
+    private string enPassantPosition = null;
+    private bool firstMoveEnPassant = false;
+    public bool capturedEnPassant = false;
+    public void signalEnPassant(string possibleTakePosition) {
+        firstMoveEnPassant = true;
+        enPassantPosition = possibleTakePosition;
+    }
+    public bool canTake_enPassant(string position) {
+        if(enPassantPosition is null)
+            return false;
+        else
+            return position.Equals(enPassantPosition);
+    }
+    public bool takenEnPassant(string position) {
+        if(!Utils.validPosition(position))
+            return false;
+        if(PGN.Count < 1)
+            return false;
+
+        // pawn to check must be on right rank to be taken en passant
+        bool white = Utils.pieceIsWhite(pieceAt(position));
+        if(position[1] != (white? '4':'5'))
+            return false;
+        
+        string takePGN = PGN[PGN.Count - 1];
+        // now, we check the last move: if it's a file followed by 'x<position>', indicating a pawn capture
+        if(takePGN.Length < 4)
+            return false;
+        if(!Utils.FILE.Contains(takePGN.Substring(0,1))) // first char must be a file
+            return false;
+        string takePosition = takePGN.Substring(2,2);
+        if(!Utils.validPosition(takePosition)) // following two chars must be a position
+            return false;
+        
+        // now we check to see if the position was captured: same file, then capture on square behind
+        if(Utils.file(position) != Utils.file(takePosition))
+            return false;
+        if(takePosition[1] != (white? '3':'6'))
+            return false;
+        
+        // final check: did a pawn just signal that it captured en passant?
+        if(capturedEnPassant)
+            capturedEnPassant = false;
+        else return false;
+
+        return true;
     }
 }

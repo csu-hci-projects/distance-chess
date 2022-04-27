@@ -26,11 +26,21 @@ public class Pawn : MonoBehaviour {
                 movePosition = null;
             else if(board.moveToMake.Contains("x") && position[0] != board.moveToMake[0])
                 movePosition = null;
+            else if(board.moveToMake.Equals(possibleMoves[1]))
+                board.signalEnPassant(possibleMoves[0]);
+            else if(movePosition.Equals(possibleMoves[2]) || movePosition.Equals(possibleMoves[3])) {
+                if(!Utils.validPiece(board.pieceAt(movePosition)))
+                    board.capturedEnPassant = true;
+            }
         }
 
         if(board.needsUpdate(position)) {
             if(Utils.pieceColor(board.pieceAt(position)) != (white? 'w':'b'))
                 gameObject.SetActive(false);
+            if(board.takenEnPassant(position)) {
+                board.put(null, position);
+                gameObject.SetActive(false);
+            }
             pin = Utils.getPin(board.pins, position);
             // update the pawn's moveset
             updatePossibleMoves();
@@ -77,14 +87,16 @@ public class Pawn : MonoBehaviour {
     // check the current move space's legality without pin rules
     private void checkMoveSpace() {
         // first, check if the forward moves are blocked
-        if(!allowedMove(possibleMoves[0]))
+        if(!allowedMove(0)) {
             forbidMove(0);
-        if(!allowedMove(possibleMoves[1]))
+            forbidMove(1);
+        }
+        else if(!allowedMove(1)) // if pawn can move forward 1, check the fast square
             forbidMove(1);
         // then, check attacked squares: if they are occupied by other colored pieces
-        if(!allowedCapture(possibleMoves[2]))
+        if(!allowedCapture(2))
             forbidMove(2);
-        if(!allowedCapture(possibleMoves[3]))
+        if(!allowedCapture(3))
             forbidMove(3);
     }
 
@@ -114,16 +126,18 @@ public class Pawn : MonoBehaviour {
             return false;
         string piece = board.pieceAt(move);
         return (!Utils.validPiece(piece)); // true if there is no piece at the move position
-    }
+    } private bool allowedMove(int index) { return allowedMove(possibleMoves[index]); }
     private bool allowedCapture(string move) {
         if(!Utils.validPosition(move)) // false if the square doesn't exist
             return false;
+        if(board.canTake_enPassant(move))
+            return true;
         string piece = board.pieceAt(move);
         if(!Utils.validPiece(piece)) // false if there is no piece at move position
             return false;
         else // true if piece on tile has opposite color
             return Utils.pieceIsWhite(piece) != white;
-    }
+    } private bool allowedCapture(int index) { return allowedCapture(possibleMoves[index]); }
 
     private void forbidMove(int index) {
         possibleMoves[index] = null;
