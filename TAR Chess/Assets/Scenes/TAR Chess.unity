@@ -3647,6 +3647,7 @@ MonoBehaviour:
   moveToMake: 
   PGN: []
   pins: []
+  capturedEnPassant: 0
 --- !u!114 &2078483189
 MonoBehaviour:
   m_ObjectHideFlags: 0
