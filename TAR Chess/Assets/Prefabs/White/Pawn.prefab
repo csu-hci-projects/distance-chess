@@ -12,8 +12,6 @@ GameObject:
   - component: {fileID: 6349358394199876680}
   - component: {fileID: 6371075408130720091}
   - component: {fileID: 6363474147381108703}
-  - component: {fileID: 6403092459535275703}
-  - component: {fileID: 6411483887335613481}
   m_Layer: 0
   m_Name: Pawn
   m_TagString: Untagged
@@ -51,7 +49,9 @@ MonoBehaviour:
   white: 1
   alive: 1
   position: 
+  movePosition: 
   possibleMoves: []
+  pin: 
 --- !u!33 &6371075408130720091
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -101,32 +101,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!54 &6403092459535275703
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6348345517729053017}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!65 &6411483887335613481
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6348345517729053017}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 0.010212819, y: 0.010212819, z: 0.015148666}
-  m_Center: {x: 4.6566126e-10, y: 0, z: 0.007666575}
