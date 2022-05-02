@@ -53,7 +53,16 @@ public class Game : MonoBehaviour {
         if(validateMove(Utils.validPosition(engineMove)))
             return true;
         if(PIECEENUM.Contains(engineMove.Substring(0,1))) {
-            return validateMove(Utils.validPosition(engineMove.Substring(1)));
+            bool noId = engineMove.Length == 3;
+            bool singleCharId = engineMove.Length == 4 && (
+                Utils.validPosition("a" + engineMove[1]) ||
+                Utils.validPosition(engineMove[1] + "1")
+            );
+            bool doubleCharId = engineMove.Length == 5 && (
+                Utils.validPosition(engineMove.Substring(1,2))
+            );
+            bool validId = noId || singleCharId || doubleCharId;
+            return validId && validateMove(Utils.validPosition(engineMove.Substring(engineMove.Length - 2)));
         }
 
         if("abcdefgh".Contains(engineMove.Substring(0,1))) {
@@ -128,6 +137,8 @@ public class Game : MonoBehaviour {
                 }
             }
             if(moves.Count > 0) {
+                if(moves.Count > 1 && !engineMove.Contains("o")) // moving piece ambiguity check: more than one piece can move iff castling
+                    moves.Clear();
                 engineMove = "";
                 engineMoveIndex = engineMoves.Length;
             }
@@ -159,6 +170,24 @@ public class Game : MonoBehaviour {
                 return piece.position.Contains(correctFile);
             } else
                 return false;
+        }
+
+        if("rnsqk".Contains(engineMove.Substring(0,1))) {
+            Utils.PieceType requiredType =
+                engineMove[0] == 'r'? Utils.rook :
+                engineMove[0] == 'n'? Utils.knight :
+                engineMove[0] == 's'? Utils.bishop :
+                engineMove[0] == 'q'? Utils.queen :
+                engineMove[0] == 'k'? Utils.queen :
+                Utils.pawn
+            ;
+            if(piece.type != requiredType)
+                return false;
+            else if(engineMove.Length == 3)
+                return piece.validMove(getMovePosition(piece));
+            
+            string posId = engineMove.Length == 4? engineMove.Substring(1,1) : engineMove.Substring(1,2);
+            return piece.position.Contains(posId) && piece.validMove(getMovePosition(piece));
         }
 
         return false;

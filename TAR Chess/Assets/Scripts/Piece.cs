@@ -34,7 +34,7 @@ public class Piece : MonoBehaviour {
 
     public virtual bool validMove(string move) => validMove(Utils.file(move), Utils.rank(move));
     public virtual bool validMove(int file, int rank) {
-        return false;
+        return !game.occupied(file, rank);
     }
 
     private float _moveSpeed = -1f;
@@ -58,7 +58,9 @@ public class Piece : MonoBehaviour {
         if(objectIsAt(coords)) {
             _moveSpeed = -1f;
             _moveCoords = Vector3.down;
+            game.board[file(), rank()] = null;
             position = _movePosition;
+            game.board[file(), rank()] = this;
             _movePosition = null;
             return true;
         }

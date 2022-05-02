@@ -31,7 +31,7 @@ public class Pawn : Piece {
         int cf=this.file(), cr=this.rank();
         if(file<0 || file>7 || rank<0 || rank>7)
             return false;
-        if(game.occupied(file,rank))
+        if(!base.validMove(file, rank))
             return false;
         if(file == cf)
             return (
