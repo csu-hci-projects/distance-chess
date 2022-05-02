@@ -7,7 +7,7 @@ public class Game : MonoBehaviour {
     public Utils.PieceColor playerColor = Utils.white;
     public string engineMoves = "";
     public int engineMoveIndex = 0;
-    private string engineMove = "";
+    public string engineMove = "";
     private List<Piece> pieces = new List<Piece>(32);
     public Piece[,] board = new Piece[8,8];
     public const float moveTime = 0.1f;
@@ -17,8 +17,11 @@ public class Game : MonoBehaviour {
     }
 
     void Update() {
-        if(engineMoveIndex + engineMove.Length < engineMoves.Length) {
-            engineMove = engineMoves.Substring(engineMoveIndex);
+        if(engineMoveIndex + engineMove.Length != engineMoves.Length) {
+            if(engineMoveIndex == engineMoves.Length)
+                engineMove = "";
+            else
+                engineMove = engineMoves.Substring(engineMoveIndex);
         }
         executeMoves();
     }
@@ -58,7 +61,7 @@ public class Game : MonoBehaviour {
             if("abcdefgh".Contains(""+mtype)) // pawn capture
                 return validateMove(Utils.validPosition(engineMove.Substring(1)));
             if(mtype == '=') // pawn promotion, ex. e-pawn to queen would be `e=q`
-                return validateMove(PIECEENUM.Contains(engineMove.Substring(2)));
+                return validateMove(engineMove[2] != 'k' && PIECEENUM.Contains(engineMove.Substring(2)));
         }
 
         return false;
@@ -82,6 +85,20 @@ public class Game : MonoBehaviour {
         }
         foreach(Piece p in done.Keys) {
             moves.Remove(p);
+            if(p.type == Utils.pawn)
+                ((Pawn) p).hasMoved = true;
+            if(p.type == Utils.king)
+                ((King) p).hasMoved = true;
+            if(p.type == Utils.pawn && engineMoves.Substring(engineMoveIndex - 2)[0] == '=') {
+                char pType = engineMoves[engineMoveIndex-1];
+                promotePawn(done[p], (
+                    pType == 'r'? Utils.rook :
+                    pType == 'n'? Utils.knight :
+                    pType == 's'? Utils.bishop :
+                    pType == 'q'? Utils.queen :
+                    Utils.pawn
+                ));
+            }
             signalAllPiecesForUpdates();
         }
         done.Clear();
@@ -95,11 +112,10 @@ public class Game : MonoBehaviour {
                     moves.Add(piece, getMovePosition(piece));
                 }
             }
-        }
-
-        if(moves.Count > 0) {
-            engineMove = "";
-            engineMoveIndex = engineMoves.Length;
+            if(moves.Count > 0) {
+                engineMove = "";
+                engineMoveIndex = engineMoves.Length;
+            }
         }
     }
     bool appliesToPiece(Piece piece) {
@@ -114,6 +130,9 @@ public class Game : MonoBehaviour {
                 return false;
             if(piece.position[0] != engineMove[0])
                 return false;
+            if(engineMove[1] == '=' && "rnbq".Contains(engineMove.Substring(2)))
+                return piece.validMove(getMovePosition(piece));
+
             return piece.validMove(engineMove.Substring(1));
         }
 
@@ -143,5 +162,19 @@ public class Game : MonoBehaviour {
     void signalAllPiecesForUpdates() {
         foreach(Piece p in pieces)
             p.updated = false;
+    }
+
+    void promotePawn(string position, Utils.PieceType toPieceType) {
+        Debug.Log("Trying to promote pawn at "+position);
+        if(toPieceType == Utils.pawn)
+            return;
+        Debug.Log("Valid promotion type "+toPieceType);
+        kill(position);
+        GameObject obj = util.spawnPiece(this, toPieceType, position);
+        obj.SetActive(true);
+        Piece piece = obj.GetComponent<Piece>();
+        piece.game = this;
+        piece.reposition(position);
+        addPiece(piece);
     }
 }
