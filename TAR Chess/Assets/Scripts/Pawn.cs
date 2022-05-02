@@ -2,144 +2,47 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pawn : MonoBehaviour {
-    public Board board;
-    public bool white, alive;
-    public string position, movePosition;
-    public List<string> possibleMoves = new List<string>(4);
-    public string pin;
-
-    void Start() {
-        for(int i=0; i<4; ++i) possibleMoves.Add(null);
-        pin = null;
-        transform.localPosition = Utils.getLocalCoordsFromPosition(position);
-        board.put(Utils.piece(white, 'p'), position);
-        updatePossibleMoves();
-        foreach(string attack in Utils.getPawnAttacksFrom(white, position))
-            board.addAttacker(white, attack, position);
-    }
+public class Pawn : Piece {
+    public bool hasMoved = false;
 
     void Update() {
-        movePosition = Utils.pawnMoveFromPGN(board.moveToMake);
-        if(!(movePosition is null)) {
-            if(board.whitesMove != white || !possibleMoves.Contains(movePosition))
-                movePosition = null;
-            else if(board.moveToMake.Contains("x") && position[0] != board.moveToMake[0])
-                movePosition = null;
-            else if(board.moveToMake.Equals(possibleMoves[1]))
-                board.signalEnPassant(possibleMoves[0]);
-            else if(movePosition.Equals(possibleMoves[2]) || movePosition.Equals(possibleMoves[3])) {
-                if(!Utils.validPiece(board.pieceAt(movePosition)))
-                    board.capturedEnPassant = true;
-            }
-        }
-
-        if(board.needsUpdate(position)) {
-            if(Utils.pieceColor(board.pieceAt(position)) != (white? 'w':'b'))
-                gameObject.SetActive(false);
-            if(board.takenEnPassant(position)) {
-                board.put(null, position);
-                gameObject.SetActive(false);
-            }
-            pin = Utils.getPin(board.pins, position);
-            // update the pawn's moveset
+        if(!updated) {
             updatePossibleMoves();
-        }
-        if(Utils.updateMove(board, transform, position, movePosition)) {
-            position = Utils.position(Utils.file(movePosition), Utils.rank(movePosition));
-            movePosition = null;
+            updated = true;
         }
     }
 
-    // simple method to get position from a forward move
-    string pawnForwardMovePosition(bool fast = false) {
-        return Utils.positionFrom(position, 0, (white? 1:-1)*(fast? 2:1));
-    }
-
-    // in progress, may not be used
-    void initiateMove(int index) {
-        if(possibleMoves[index] is null) return;
-
-        if(!board.movePiece(position, possibleMoves[index])) {
-            possibleMoves[index] = null;
-            return;
+    public override void updatePossibleMoves() {
+        possibleMoves.Clear();
+        int f=file(), r=rank(), fwd=forward();
+        if(validMove(f, r+fwd)) {
+            possibleMoves.Add(Piece.Position(f, r+fwd));
+            if(validMove(f, r+2*fwd))
+                possibleMoves.Add(Piece.Position(f, r+2*fwd));
         }
-
-        updatePossibleMoves();
+        if(validMove(f-1, r+fwd))
+            possibleMoves.Add(Piece.Position(f-1, r+fwd));
+        if(validMove(f+1, r+fwd))
+            possibleMoves.Add(Piece.Position(f+1, r+fwd));
     }
 
-    // repopulate the possible moves array with legal move positions from current position
-    public void updatePossibleMoves() {
-        // first, generate all positions that could feasibly be reached
-        possibleMoves[0] = pawnForwardMovePosition();
-        if(position[1] == (white? '2':'7')) // if the pawn is in its starting square, add a fast forward move
-            possibleMoves[1] = pawnForwardMovePosition(true);
-        else forbidMove(1); // otherwise forbid it
-        // get possible attack squares
-        possibleMoves[2] = Utils.getPawnAttackPosition(true, white, position);
-        possibleMoves[3] = Utils.getPawnAttackPosition(false, white, position);
-
-        // now, update move space to remove illegal move positions
-        checkMoveSpace();
-        checkPins();
-    }
-
-    // check the current move space's legality without pin rules
-    private void checkMoveSpace() {
-        // first, check if the forward moves are blocked
-        if(!allowedMove(0)) {
-            forbidMove(0);
-            forbidMove(1);
-        }
-        else if(!allowedMove(1)) // if pawn can move forward 1, check the fast square
-            forbidMove(1);
-        // then, check attacked squares: if they are occupied by other colored pieces
-        if(!allowedCapture(2))
-            forbidMove(2);
-        if(!allowedCapture(3))
-            forbidMove(3);
-    }
-
-    // check the current move space's validity under pin rules
-    private void checkPins() {
-        // if there are no pins on this piece, no work is needed
-        if(pin is null)
-            return;
-
-        // get positions between this piece and pinning piece
-        List<string> betweens = Utils.getPositionsBetween(position, pin);
-
-        for(int i=0; i<2; ++i) {
-            // now, ensure that possible moves only contains positions within the pin
-            string move = possibleMoves[i];
-            if(Utils.validPosition(move) && !betweens.Contains(move))
-                forbidMove(i);
-        }
-        for(int i=2; i<4; ++i) {
-            // capture is only allowed if this pawn captures the pinning piece
-            if(possibleMoves[i] != pin)
-                forbidMove(i);
-        }
-    }
-    private bool allowedMove(string move) {
-        if(!Utils.validPosition(move)) // false if the move square doesn't exist
+    public override bool validMove(string move) => validMove(Piece.file(move), Piece.rank(move));
+    public override bool validMove(int file, int rank) {
+        int cf=this.file(), cr=this.rank();
+        if(file<0 || file>7 || rank<0 || rank>7)
             return false;
-        string piece = board.pieceAt(move);
-        return (!Utils.validPiece(piece)); // true if there is no piece at the move position
-    } private bool allowedMove(int index) { return allowedMove(possibleMoves[index]); }
-    private bool allowedCapture(string move) {
-        if(!Utils.validPosition(move)) // false if the square doesn't exist
+        if(game.occupied(file,rank))
             return false;
-        if(board.canTake_enPassant(move))
-            return true;
-        string piece = board.pieceAt(move);
-        if(!Utils.validPiece(piece)) // false if there is no piece at move position
+        if(file == cf)
+            return (
+                (rank == cr + forward()) ||
+                (!hasMoved && validMove(cf, cr+forward()) && rank == cr + 2*forward())
+            );
+        if(Mathf.Abs(cf-file) == 1)
+            return rank == cr + forward();
+        
             return false;
-        else // true if piece on tile has opposite color
-            return Utils.pieceIsWhite(piece) != white;
-    } private bool allowedCapture(int index) { return allowedCapture(possibleMoves[index]); }
-
-    private void forbidMove(int index) {
-        possibleMoves[index] = null;
     }
+
+    int forward(int distance = 1) => (color==PieceColor.white? 1:-1)*distance;
 }

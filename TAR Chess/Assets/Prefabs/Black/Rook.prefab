@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9160101355794719957}
-  - component: {fileID: -9024452402761313129}
+  - component: {fileID: -2153213311153225625}
   - component: {fileID: 5281499449695938850}
   - component: {fileID: 5920129124052783566}
   m_Layer: 0
@@ -33,7 +33,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 90}
---- !u!114 &-9024452402761313129
+--- !u!114 &-2153213311153225625
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -42,18 +42,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 7410320487004687762}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42752cf0a36b1c740ac40481c0bd7f42, type: 3}
+  m_Script: {fileID: 11500000, guid: ed4f2a5745b2f2a48af520a49edff94a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  board: {fileID: 0}
-  king: {fileID: 0}
-  white: 0
-  position: 
-  movePosition: 
-  pin: 
+  game: {fileID: 0}
+  type: 1
+  color: -1
+  position: a8
   possibleMoves: []
-  kingside: 0
-  firstMove: 1
 --- !u!33 &5281499449695938850
 MeshFilter:
   m_ObjectHideFlags: 0

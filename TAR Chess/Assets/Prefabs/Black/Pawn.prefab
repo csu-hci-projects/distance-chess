@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6346664437118160883}
-  - component: {fileID: -7906660756717115427}
+  - component: {fileID: 8344994119931238024}
   - component: {fileID: 6371075408130720091}
   - component: {fileID: 6363474147381108703}
   m_Layer: 0
@@ -33,7 +33,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 90}
---- !u!114 &-7906660756717115427
+--- !u!114 &8344994119931238024
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -42,16 +42,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 6348345517729053017}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 936b97037a94dc14d87fec45485520a8, type: 3}
+  m_Script: {fileID: 11500000, guid: 504b32aee96b33d4b957222e2529fac8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  board: {fileID: 0}
-  white: 0
-  alive: 1
-  position: 
-  movePosition: 
+  game: {fileID: 0}
+  type: 0
+  color: -1
+  position: a7
   possibleMoves: []
-  pin: 
+  hasMoved: 0
 --- !u!33 &6371075408130720091
 MeshFilter:
   m_ObjectHideFlags: 0
