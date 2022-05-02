@@ -6,9 +6,17 @@ public class Utils : MonoBehaviour {
     public const string FILE = "abcdefgh";
     public const string RANK = "12345678";
     public enum PieceColor { white = 1, black = -1 };
+    public const PieceColor white = PieceColor.white, black = PieceColor.black;
     public enum PieceType {
         pawn, rook, knight, bishop, queen, king
     };
+    public const PieceType
+        pawn = PieceType.pawn,
+        rook = PieceType.rook,
+        knight = PieceType.knight,
+        bishop = PieceType.bishop,
+        queen = PieceType.queen,
+        king = PieceType.king;
     
     public GameObject whiteRook, whiteKnight, whiteBishop, whiteQueen,
                       blackRook, blackKnight, blackBishop, blackQueen;
@@ -37,11 +45,11 @@ public class Utils : MonoBehaviour {
             return new Vector3(x, 0, z);
     }
 
-    public void spawnPiece(Game game, PieceType type, string position) {
+    public GameObject spawnPiece(Game game, PieceType type, string position) {
         if(!validPosition(position))
-            return;
+            return null;
         GameObject prefabToSpawn =
-            game.playerColor == PieceColor.white? (
+            game.playerColor != PieceColor.white? (
                 type == PieceType.rook? whiteRook :
                 type == PieceType.knight? whiteKnight :
                 type == PieceType.bishop? whiteBishop :
@@ -57,13 +65,11 @@ public class Utils : MonoBehaviour {
         ;
 
         if(prefabToSpawn is null)
-            return;
+            return null;
             
         GameObject newPiece = Instantiate(prefabToSpawn);
-        newPiece.transform.SetParent(game.transform);
-        Piece piece = newPiece.GetComponent<Piece>() as Piece;
-        piece.game = game;
-        piece.reposition(position);
-        game.addPiece(piece);
+        GameObject parent = GameObject.FindGameObjectWithTag(("newPieces"));
+        newPiece.transform.SetParent(parent.transform, false);
+        return newPiece;
     }
 }

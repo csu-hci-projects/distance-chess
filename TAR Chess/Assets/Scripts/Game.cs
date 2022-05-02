@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Game : MonoBehaviour {
     public Utils util;
-    public Utils.PieceColor playerColor = Utils.PieceColor.white;
+    public Utils.PieceColor playerColor = Utils.white;
     public string engineMoves = "";
     public int engineMoveIndex = 0;
     private string engineMove = "";
@@ -13,7 +13,7 @@ public class Game : MonoBehaviour {
     public const float moveTime = 0.1f;
 
     void Start() {
-        util.spawnPiece(this, Utils.PieceType.queen, "e1");
+        
     }
 
     void Update() {
@@ -104,13 +104,13 @@ public class Game : MonoBehaviour {
     }
     bool appliesToPiece(Piece piece) {
         if(Utils.validPosition(engineMove)) {
-            if(piece.type != Utils.PieceType.pawn)
+            if(piece.type != Utils.pawn)
                 return false;
             if(piece.file() != Utils.file(engineMove))
                 return false;
             return piece.validMove(engineMove);
         } else if(engineMove[0] >= 'a' && engineMove[0] <= 'h') {
-            if(piece.type != Utils.PieceType.pawn)
+            if(piece.type != Utils.pawn)
                 return false;
             if(piece.position[0] != engineMove[0])
                 return false;
@@ -126,16 +126,16 @@ public class Game : MonoBehaviour {
             char file = engineMove[0];
             if(file >= 'a' && file <= 'h') { // it's a pawn
                 if(engineMove[1] == '=') { // it's a promotion
-                    string rank = playerColor == Utils.PieceColor.white? "1":"8";
+                    string rank = playerColor == Utils.white? "1":"8";
                     return file + rank;
                 }
             }
             if(engineMove.Contains("o")) {
-                string rank = (piece.color == Utils.PieceColor.white? "1":"8");
+                string rank = (piece.color == Utils.white? "1":"8");
                 if(engineMove.Equals("o o"))
-                    return (piece.type == Utils.PieceType.king? "c":"d") + rank;
+                    return (piece.type == Utils.king? "c":"d") + rank;
                 if(engineMove.Equals("ooo"))
-                    return (piece.type == Utils.PieceType.king? "g":"f") + rank;
+                    return (piece.type == Utils.king? "g":"f") + rank;
             }
         }
         return engineMove.Substring(engineMove.Length - 2);

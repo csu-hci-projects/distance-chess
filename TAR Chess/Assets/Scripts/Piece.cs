@@ -13,7 +13,7 @@ public class Piece : MonoBehaviour {
     public bool updated = false;
 
     protected virtual void Start() {
-        if(color == game.playerColor) {
+        if(!(game is null) && color == game.playerColor) {
             game.kill(position);
             gameObject.SetActive(false);
         } else {
