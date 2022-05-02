@@ -18,11 +18,8 @@ public class Game : MonoBehaviour {
     void Update() {
         if(engineMoveIndex + engineMove.Length < engineMoves.Length) {
             engineMove = engineMoves.Substring(engineMoveIndex);
-            Debug.Log(engineMove);
         }
-        if(engineMoveIndex < engineMoves.Length && validMove()) {
-            executeMove();
-        }
+        executeMoves();
     }
 
     public void addPiece(Piece piece) {
@@ -33,6 +30,9 @@ public class Game : MonoBehaviour {
     public void kill(int file, int rank) {
         if(file<0 || file>7 || rank<0 || rank>7)
             return;
+        Piece p = board[file,rank];
+        if(!(p is null))
+            p.die();
         board[file,rank] = null;
     }
 
@@ -69,37 +69,47 @@ public class Game : MonoBehaviour {
                 return false;
         }
     
-    Piece movingPiece = null;
-    string movePosition = "";
-    void executeMove() {
-        if(movingPiece is null) {
+    Dictionary<Piece, string> moves = new Dictionary<Piece, string>();
+    Dictionary<Piece, string> done = new Dictionary<Piece, string>();
+    void executeMoves() {
+        getMoves();
+        foreach(KeyValuePair<Piece, string> move in moves) {
+            Piece piece = move.Key;
+            if(piece.glideTo(move.Value)) done.Add(move.Key, move.Value);
+        }
+        foreach(Piece p in done.Keys) {
+            moves.Remove(p);
+        }
+    }
+    void getMoves() {
+        if(engineMove.Length == 0)
+            return;
+        if(moves.Count == 0) {
             foreach(Piece piece in pieces) {
                 if(appliesToPiece(piece)) {
-                    movingPiece = piece;
-                    break;
+                    moves.Add(piece, getMovePosition(piece));
                 }
             }
         }
-        if(movingPiece is null)
-            return;
-        if(movePosition is null)
-            movePosition = getMovePosition();
         
-        movingPiece.glideTo(movePosition);
+        engineMove = "";
+        engineMoveIndex = engineMoves.Length;
     }
     bool appliesToPiece(Piece piece) {
+        string movePosition = getMovePosition(piece);
         if(Piece.validPosition(movePosition)) {
             if(piece.type != Piece.PieceType.pawn)
+                return false;
+            if(piece.file() != Piece.file(movePosition))
                 return false;
             return piece.validMove(movePosition);
         }
 
         return false;
     }
-    string getMovePosition() {
+    string getMovePosition(Piece piece) {
         if(engineMove is null || engineMove.Length < 2)
             return null;
-        
-        return null;
+        return engineMove.Substring(engineMove.Length - 2);
     }
 }

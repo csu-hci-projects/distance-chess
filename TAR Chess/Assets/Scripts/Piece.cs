@@ -28,8 +28,11 @@ public class Piece : MonoBehaviour {
         }
     }
 
+    public void die() {
+        gameObject.SetActive(false);
+    }
+
     public virtual void updatePossibleMoves() {
-        Debug.Log("Piece updating.");
         possibleMoves.Clear();
     }
     public int file() => Piece.file(position);

@@ -31,16 +31,13 @@ public class Pawn : Piece {
         int cf=this.file(), cr=this.rank();
         if(file<0 || file>7 || rank<0 || rank>7)
             return false;
-        Debug.Log("Move "+Position(file,rank)+" is on board.");
         if(game.occupied(file,rank))
             return false;
-        Debug.Log("Tile empty");
         if(file == cf)
             return (
                 (rank == cr + forward()) ||
                 (!hasMoved && validMove(cf, cr+forward()) && rank == cr + 2*forward())
             );
-        Debug.Log("Checking captures.");
         if(Mathf.Abs(cf-file) == 1)
             return rank == cr + forward();
         
