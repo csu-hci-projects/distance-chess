@@ -69,6 +69,9 @@ public class Game : MonoBehaviour {
                 return validateMove(engineMove[2] != 'k' && PIECEENUM.Contains(engineMove.Substring(2)));
         }
 
+        if(engineMove.Equals("o o") || engineMove.Equals("ooo"))
+            return validateMove(true);
+
         return false;
 
     }
@@ -94,6 +97,8 @@ public class Game : MonoBehaviour {
                 ((Pawn) p).hasMoved = true;
             if(p.type == Utils.king)
                 ((King) p).hasMoved = true;
+            if(p.type == Utils.rook)
+                ((Rook) p).hasMoved = true;
             if(p.type == Utils.pawn && engineMoves.Substring(engineMoveIndex - 2)[0] == '=') {
                 char pType = engineMoves[engineMoveIndex-1];
                 promotePawn(done[p], (
@@ -117,8 +122,7 @@ public class Game : MonoBehaviour {
                 engineMove = "";
                 engineMoveIndex = engineMoves.Length;
                 return;
-            }
-            foreach(Piece piece in pieces) {
+            } else foreach(Piece piece in pieces) {
                 if(appliesToPiece(piece)) {
                     moves.Add(piece, getMovePosition(piece));
                 }
@@ -147,6 +151,14 @@ public class Game : MonoBehaviour {
                 return piece.validMove(getMovePosition(piece));
 
             return piece.validMove(engineMove.Substring(1));
+        } else if(engineMove.Contains("o")) {
+            if(piece.type == Utils.king && !((King) piece).hasMoved)
+                return true;
+            else if(piece.type == Utils.rook && !((Rook) piece).hasMoved) {
+                string correctFile = engineMove.Contains(" ")? "h":"a"; // 'h' if short, 'a' if long
+                return piece.position.Contains(correctFile);
+            } else
+                return false;
         }
 
         return false;
@@ -162,11 +174,11 @@ public class Game : MonoBehaviour {
                     return file + rank;
                 }
             }
-            if(engineMove.Contains("o")) {
+            if(engineMove.Contains("o")) { // castle
                 string rank = (piece.color == Utils.white? "1":"8");
-                if(engineMove.Equals("o o"))
+                if(engineMove.Equals("o o")) // short
                     return (piece.type == Utils.king? "c":"d") + rank;
-                if(engineMove.Equals("ooo"))
+                else // if(engineMove.Equals("ooo")) // long
                     return (piece.type == Utils.king? "g":"f") + rank;
             }
         }
