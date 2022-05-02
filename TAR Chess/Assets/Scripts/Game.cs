@@ -52,6 +52,8 @@ public class Game : MonoBehaviour {
                 return validateMove(PIECEENUM.Contains(engineMove.Substring(2)));
         }
 
+        return false;
+
     }
         private bool validateMove(bool predicate) {
             if(predicate) {
@@ -83,12 +85,7 @@ public class Game : MonoBehaviour {
         if(Piece.validPosition(movePosition)) {
             if(piece.type != Piece.PieceType.pawn)
                 return false;
-            int f = Piece.file(movePosition), r = Piece.rank(movePosition);
-            if(f != piece.file())
-                return false;
-            if(r )
-            if(((Pawn) piece).hasMoved)
-            
+            return piece.validMove(movePosition);
         }
 
         return false;
@@ -97,5 +94,6 @@ public class Game : MonoBehaviour {
         if(engineMove is null || engineMove.Length < 2)
             return null;
         
+        return null;
     }
 }

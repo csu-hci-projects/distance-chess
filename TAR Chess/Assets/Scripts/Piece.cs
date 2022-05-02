@@ -32,6 +32,13 @@ public class Piece : MonoBehaviour {
     public int file() => Piece.file(position);
     public int rank() => Piece.rank(position);
 
+    public virtual bool validMove(string move) {
+        return false;
+    }
+    public virtual bool validMove(int file, int rank) {
+        return false;
+    }
+
     private float _moveSpeed = -1f;
     private Vector3 _moveCoords = Vector3.down;
     public bool glideTo(string position) {
