@@ -48,7 +48,7 @@ MonoBehaviour:
   game: {fileID: 0}
   type: 0
   color: -1
-  position: a1
+  position: a7
   possibleMoves: []
   hasMoved: 0
 --- !u!33 &6371075408130720091
