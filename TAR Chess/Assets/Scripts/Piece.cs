@@ -4,17 +4,13 @@ using UnityEngine;
 
 public class Piece : MonoBehaviour {
     public Game game;
-    public enum PieceColor { white = 1, black = -1 };
-    public enum PieceType {
-        pawn, rook, knight, bishop, queen, king
-    };
 
-    public PieceType type;
-    public PieceColor color;
+    public Utils.PieceType type;
+    public Utils.PieceColor color;
 
     public string position = "a1";
     public List<string> possibleMoves = new List<string>();
-    protected bool updated = false;
+    public bool updated = false;
 
     protected virtual void Start() {
         if(color == game.playerColor) {
@@ -34,7 +30,7 @@ public class Piece : MonoBehaviour {
     }
     public int file() => Utils.file(position);
     public int rank() => Utils.rank(position);
-    protected int forward(int distance = 1) => (color==PieceColor.white? 1:-1)*distance;
+    protected int forward(int distance = 1) => (color==Utils.PieceColor.white? 1:-1)*distance;
 
     public virtual bool validMove(string move) => validMove(Utils.file(move), Utils.rank(move));
     public virtual bool validMove(int file, int rank) {
@@ -43,9 +39,12 @@ public class Piece : MonoBehaviour {
 
     private float _moveSpeed = -1f;
     private Vector3 _moveCoords = Vector3.down;
+    private string _movePosition = null;
     public bool glideTo(string position) {
         if(!Utils.validPosition(position))
             return false;
+        if(_movePosition is null)
+            _movePosition = position;
         if(_moveCoords.Equals(Vector3.down))
             _moveCoords = Utils.coords(position);
         return glideTo(_moveCoords);
@@ -59,6 +58,8 @@ public class Piece : MonoBehaviour {
         if(objectIsAt(coords)) {
             _moveSpeed = -1f;
             _moveCoords = Vector3.down;
+            position = _movePosition;
+            _movePosition = null;
             return true;
         }
 
@@ -86,7 +87,7 @@ public class Piece : MonoBehaviour {
     }
     public bool objectIsAt(string position) => objectIsAt(Utils.coords(position));
     public bool objectIsAt(Vector3 coords) {
-        if(Vector3.Distance(transform.localPosition, coords) < 0.001f)
+        if(Vector3.Distance(transform.localPosition, coords) < 0.01f)
             return reposition(coords);
         else
             return false;

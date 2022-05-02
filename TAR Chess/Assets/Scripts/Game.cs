@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Game : MonoBehaviour {
-    public Piece.PieceColor playerColor = Piece.PieceColor.white;
+    public Utils.PieceColor playerColor = Utils.PieceColor.white;
     public string engineMoves = "";
     public int engineMoveIndex = 0;
     private string engineMove = "";
@@ -52,9 +52,9 @@ public class Game : MonoBehaviour {
 
         if("abcdefgh".Contains(engineMove.Substring(0,1))) {
             char mtype = engineMove[1];
-            if("abcdefgh".Contains(""+mtype))
+            if("abcdefgh".Contains(""+mtype)) // pawn capture
                 return validateMove(Utils.validPosition(engineMove.Substring(1)));
-            if(mtype == '=')
+            if(mtype == '=') // pawn promotion, ex. e-pawn to queen would be `e=q`
                 return validateMove(PIECEENUM.Contains(engineMove.Substring(2)));
         }
 
@@ -79,10 +79,12 @@ public class Game : MonoBehaviour {
         }
         foreach(Piece p in done.Keys) {
             moves.Remove(p);
+            signalAllPiecesForUpdates();
         }
+        done.Clear();
     }
     void getMoves() {
-        if(engineMove.Length == 0)
+        if(engineMove.Length < 2)
             return;
         if(moves.Count == 0) {
             foreach(Piece piece in pieces) {
@@ -91,18 +93,25 @@ public class Game : MonoBehaviour {
                 }
             }
         }
-        
-        engineMove = "";
-        engineMoveIndex = engineMoves.Length;
+
+        if(moves.Count > 0) {
+            engineMove = "";
+            engineMoveIndex = engineMoves.Length;
+        }
     }
     bool appliesToPiece(Piece piece) {
-        string movePosition = getMovePosition(piece);
-        if(Utils.validPosition(movePosition)) {
-            if(piece.type != Piece.PieceType.pawn)
+        if(Utils.validPosition(engineMove)) {
+            if(piece.type != Utils.PieceType.pawn)
                 return false;
-            if(piece.file() != Utils.file(movePosition))
+            if(piece.file() != Utils.file(engineMove))
                 return false;
-            return piece.validMove(movePosition);
+            return piece.validMove(engineMove);
+        } else if(engineMove[0] >= 'a' && engineMove[0] <= 'h') {
+            if(piece.type != Utils.PieceType.pawn)
+                return false;
+            if(piece.position[0] != engineMove[0])
+                return false;
+            return piece.validMove(engineMove.Substring(1));
         }
 
         return false;
@@ -111,5 +120,9 @@ public class Game : MonoBehaviour {
         if(engineMove is null || engineMove.Length < 2)
             return null;
         return engineMove.Substring(engineMove.Length - 2);
+    }
+    void signalAllPiecesForUpdates() {
+        foreach(Piece p in pieces)
+            p.updated = false;
     }
 }

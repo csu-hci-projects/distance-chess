@@ -5,6 +5,10 @@ using UnityEngine;
 public class Utils : MonoBehaviour {
     public const string FILE = "abcdefgh";
     public const string RANK = "12345678";
+    public enum PieceColor { white = 1, black = -1 };
+    public enum PieceType {
+        pawn, rook, knight, bishop, queen, king
+    };
     
     public static bool validPosition(string position) => file(position)!=-1 && rank(position)!=-1;
     public static string position(int file, int rank) {
