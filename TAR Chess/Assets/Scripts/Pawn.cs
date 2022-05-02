@@ -16,17 +16,17 @@ public class Pawn : Piece {
         possibleMoves.Clear();
         int f=file(), r=rank(), fwd=forward();
         if(validMove(f, r+fwd)) {
-            possibleMoves.Add(Piece.Position(f, r+fwd));
+            possibleMoves.Add(Utils.position(f, r+fwd));
             if(validMove(f, r+2*fwd))
-                possibleMoves.Add(Piece.Position(f, r+2*fwd));
+                possibleMoves.Add(Utils.position(f, r+2*fwd));
         }
         if(validMove(f-1, r+fwd))
-            possibleMoves.Add(Piece.Position(f-1, r+fwd));
+            possibleMoves.Add(Utils.position(f-1, r+fwd));
         if(validMove(f+1, r+fwd))
-            possibleMoves.Add(Piece.Position(f+1, r+fwd));
+            possibleMoves.Add(Utils.position(f+1, r+fwd));
     }
 
-    public override bool validMove(string move) => validMove(Piece.file(move), Piece.rank(move));
+    public override bool validMove(string move) => validMove(Utils.file(move), Utils.rank(move));
     public override bool validMove(int file, int rank) {
         int cf=this.file(), cr=this.rank();
         if(file<0 || file>7 || rank<0 || rank>7)

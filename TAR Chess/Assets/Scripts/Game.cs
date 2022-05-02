@@ -26,7 +26,7 @@ public class Game : MonoBehaviour {
         pieces.Add(piece);
         board[piece.file(), piece.rank()] = piece;
     }
-    public void kill(string position) => kill(Piece.file(position), Piece.rank(position));
+    public void kill(string position) => kill(Utils.file(position), Utils.rank(position));
     public void kill(int file, int rank) {
         if(file<0 || file>7 || rank<0 || rank>7)
             return;
@@ -44,16 +44,16 @@ public class Game : MonoBehaviour {
         if(engineMove.Length < 2)
             return false;
         const string PIECEENUM = "rnsqk";
-        if(validateMove(Piece.validPosition(engineMove)))
+        if(validateMove(Utils.validPosition(engineMove)))
             return true;
         if(PIECEENUM.Contains(engineMove.Substring(0,1))) {
-            return validateMove(Piece.validPosition(engineMove.Substring(1)));
+            return validateMove(Utils.validPosition(engineMove.Substring(1)));
         }
 
         if("abcdefgh".Contains(engineMove.Substring(0,1))) {
             char mtype = engineMove[1];
             if("abcdefgh".Contains(""+mtype))
-                return validateMove(Piece.validPosition(engineMove.Substring(1)));
+                return validateMove(Utils.validPosition(engineMove.Substring(1)));
             if(mtype == '=')
                 return validateMove(PIECEENUM.Contains(engineMove.Substring(2)));
         }
@@ -97,10 +97,10 @@ public class Game : MonoBehaviour {
     }
     bool appliesToPiece(Piece piece) {
         string movePosition = getMovePosition(piece);
-        if(Piece.validPosition(movePosition)) {
+        if(Utils.validPosition(movePosition)) {
             if(piece.type != Piece.PieceType.pawn)
                 return false;
-            if(piece.file() != Piece.file(movePosition))
+            if(piece.file() != Utils.file(movePosition))
                 return false;
             return piece.validMove(movePosition);
         }
