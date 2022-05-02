@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4696857459274204}
+  - component: {fileID: -6060624896852694578}
   - component: {fileID: 6356074503588724892}
   m_Layer: 0
   m_Name: Board
@@ -31,6 +32,32 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-6060624896852694578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1109342852123754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4aab6d2c5cb09f4eba5cf4ca6a7fbde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  whiteRook: {fileID: 7410320487004687762, guid: 29072c58f78a447e09e9ca55596cf76f,
+    type: 3}
+  whiteKnight: {fileID: 1589209476840242, guid: 1b1f559bfdac84ab388545154d81dcf8,
+    type: 3}
+  whiteBishop: {fileID: 1003520967994840, guid: a8f7e0e006bb0478fa8bb11ef060d709,
+    type: 3}
+  whiteQueen: {fileID: 1590660762416834, guid: 710abb740f65c45f8afec4f4eb7045f8, type: 3}
+  blackRook: {fileID: 7410320487004687762, guid: 56902b3aa76d64d758516d63a16b2014,
+    type: 3}
+  blackKnight: {fileID: 1589209476840242, guid: cf5f373ea12384d0490189467be16f33,
+    type: 3}
+  blackBishop: {fileID: 1003520967994840, guid: c2f07e0574a4241d9a9042c286d64ce1,
+    type: 3}
+  blackQueen: {fileID: 1590660762416834, guid: bcb9f5a0e13234ad59ec30ef973fc839, type: 3}
 --- !u!114 &6356074503588724892
 MonoBehaviour:
   m_ObjectHideFlags: 0

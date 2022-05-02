@@ -4,23 +4,16 @@ using UnityEngine;
 
 public class Piece : MonoBehaviour {
     public Game game;
-    public enum PieceColor { white = 1, black = -1 };
-    public enum PieceType {
-        pawn, rook, knight, bishop, queen, king
-    };
 
-    public PieceType type;
-    public PieceColor color;
+    public Utils.PieceType type;
+    public Utils.PieceColor color;
 
     public string position = "a1";
-
-    private const string FILE = "abcdefgh";
-    private const string RANK = "12345678";
     public List<string> possibleMoves = new List<string>();
-    protected bool updated = false;
+    public bool updated = false;
 
     protected virtual void Start() {
-        if(color == game.playerColor) {
+        if(!(game is null) && color == game.playerColor) {
             game.kill(position);
             gameObject.SetActive(false);
         } else {
@@ -35,21 +28,25 @@ public class Piece : MonoBehaviour {
     public virtual void updatePossibleMoves() {
         possibleMoves.Clear();
     }
-    public int file() => Piece.file(position);
-    public int rank() => Piece.rank(position);
+    public int file() => Utils.file(position);
+    public int rank() => Utils.rank(position);
+    protected int forward(int distance = 1) => (color==Utils.PieceColor.white? 1:-1)*distance;
 
-    public virtual bool validMove(string move) => validMove(Piece.file(move), Piece.rank(move));
+    public virtual bool validMove(string move) => validMove(Utils.file(move), Utils.rank(move));
     public virtual bool validMove(int file, int rank) {
-        return false;
+        return !game.occupied(file, rank);
     }
 
     private float _moveSpeed = -1f;
     private Vector3 _moveCoords = Vector3.down;
+    private string _movePosition = null;
     public bool glideTo(string position) {
-        if(!validPosition(position))
+        if(!Utils.validPosition(position))
             return false;
+        if(_movePosition is null)
+            _movePosition = position;
         if(_moveCoords.Equals(Vector3.down))
-            _moveCoords = localCoordsFrom(position);
+            _moveCoords = Utils.coords(position);
         return glideTo(_moveCoords);
     }
     public bool glideTo(Vector3 coords) {
@@ -61,28 +58,26 @@ public class Piece : MonoBehaviour {
         if(objectIsAt(coords)) {
             _moveSpeed = -1f;
             _moveCoords = Vector3.down;
+            game.board[file(), rank()] = null;
+            position = _movePosition;
+            game.board[file(), rank()] = this;
+            _movePosition = null;
             return true;
         }
 
         return false;
     }
 
-    public string positionFromPiece(int dFile, int dRank) {
-        int f = file() + dFile;
-        int r = rank() + dRank;
-        if(!(f>=0 && f<=7)) return null;
-        if(!(r>=0 && r<=7)) return null;
-        
-        return FILE.Substring(f,1) + RANK.Substring(r,1);
-    }
+    public string positionFromPiece(int dFile, int dRank) =>
+        Utils.position(file() + dFile, rank() + dRank);
 
     public bool reposition(string newPosition) {
-        if(validPosition(newPosition))
+        if(Utils.validPosition(newPosition))
             position = newPosition;
         else
             return false;
 
-        return reposition(localCoordsFrom(newPosition));
+        return reposition(Utils.coords(newPosition));
     }
     public bool reposition(Vector3 coords) {
         if(coords.Equals(Vector3.down))
@@ -92,46 +87,11 @@ public class Piece : MonoBehaviour {
 
         return true;
     }
-    public bool objectIsAt(string position) {
-        return objectIsAt(localCoordsFrom(position));
-    }
+    public bool objectIsAt(string position) => objectIsAt(Utils.coords(position));
     public bool objectIsAt(Vector3 coords) {
-        if(Vector3.Distance(transform.localPosition, coords) < 0.001f)
+        if(Vector3.Distance(transform.localPosition, coords) < 0.01f)
             return reposition(coords);
         else
             return false;
-    }
-
-    public static bool validPosition(string position) {
-        if(position is null || position.Length != 2)
-            return false;
-        if(FILE.IndexOf(position[0]) == -1)
-            return false;
-        if(RANK.IndexOf(position[1]) == -1)
-            return false;
-        return true;
-    }
-    public static Vector3 localCoordsFrom(string position) {
-        Vector3 coords = Vector3.down;
-        if(validPosition(position)) {
-            coords.x = (float) file(position);
-            coords.y = 0f;
-            coords.z = (float) rank(position);
-        }
-        return coords;
-    }
-    public static int file(string position) {
-        if(!validPosition(position)) return -1;
-        else return FILE.IndexOf(position[0]);
-    }
-    public static int rank(string position) {
-        if(!validPosition(position)) return -1;
-        else return RANK.IndexOf(position[1]);
-    }
-    public static string Position(int file, int rank) {
-        if(file<0 || file>7 || rank<0 || rank>7)
-            return null;
-        else return
-            FILE.Substring(file,1) + RANK.Substring(rank,1);
     }
 }
