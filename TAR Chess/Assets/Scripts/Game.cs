@@ -178,7 +178,7 @@ public class Game : MonoBehaviour {
                 engineMove[0] == 'n'? Utils.knight :
                 engineMove[0] == 's'? Utils.bishop :
                 engineMove[0] == 'q'? Utils.queen :
-                engineMove[0] == 'k'? Utils.queen :
+                engineMove[0] == 'k'? Utils.king :
                 Utils.pawn
             ;
             if(piece.type != requiredType)
@@ -204,11 +204,11 @@ public class Game : MonoBehaviour {
                 }
             }
             if(engineMove.Contains("o")) { // castle
-                string rank = (piece.color == Utils.white? "1":"8");
+                string rank = piece.position.Substring(1,1);
                 if(engineMove.Equals("o o")) // short
-                    return (piece.type == Utils.king? "c":"d") + rank;
-                else // if(engineMove.Equals("ooo")) // long
                     return (piece.type == Utils.king? "g":"f") + rank;
+                else // if(engineMove.Equals("ooo")) // long
+                    return (piece.type == Utils.king? "c":"d") + rank;
             }
         }
         if(engineMove.Length == 4) {

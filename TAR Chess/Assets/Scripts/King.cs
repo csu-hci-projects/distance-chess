@@ -14,8 +14,9 @@ public class King : Piece {
         int cf = this.file(), cr = this.rank();
         if(cf == file && cr == rank)
             return false;
-        if(Mathf.Abs(cf - file) <= 1 && Mathf.Abs(cr - rank) <= 1)
-            return true;
-        return false;
+        return base.validMove(file,rank) &&
+            Mathf.Abs(cf-file) < 2 &&
+            Mathf.Abs(cr-rank) < 2
+        ;
     }
 }
