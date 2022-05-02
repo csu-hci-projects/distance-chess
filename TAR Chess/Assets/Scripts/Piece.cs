@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Piece : MonoBehaviour {
     public Game game;
-    public enum PieceColor { white, black };
+    public enum PieceColor { white = 1, black = -1 };
     public enum PieceType {
         pawn, rook, knight, bishop, queen, king
     };
@@ -16,28 +16,53 @@ public class Piece : MonoBehaviour {
 
     private const string FILE = "abcdefgh";
     private const string RANK = "12345678";
+    public List<string> possibleMoves = new List<string>();
 
     void Start() {
-        reposition(position);
+        
     }
 
     void Update() {
         
     }
 
-    public int file() {
-        string f = position.Substring(0,1);
-        if(FILE.Contains(f))
-            return FILE.IndexOf(f);
-        else
-            return -1;
+    public virtual void updatePossibleMoves() {
+        possibleMoves.Clear();
     }
-    public int rank() {
-        string r = position.Substring(1);
-        if(RANK.Contains(r))
-            return RANK.IndexOf(r);
-        else
-            return -1;
+    public int file() => Piece.file(position);
+    public int rank() => Piece.rank(position);
+
+    private float _moveSpeed = -1f;
+    private Vector3 _moveCoords = Vector3.down;
+    public bool glideTo(string position) {
+        if(!validPosition(position))
+            return false;
+        if(_moveCoords.Equals(Vector3.down))
+            _moveCoords = localCoordsFrom(position);
+        return glideTo(_moveCoords);
+    }
+    public bool glideTo(Vector3 coords) {
+        if(_moveSpeed == -1f) {
+            _moveSpeed = Vector3.Distance(transform.localPosition, coords) / Game.moveTime;
+        }
+
+        transform.localPosition = Vector3.MoveTowards(transform.localPosition, coords, _moveSpeed*Time.deltaTime);
+        if(objectIsAt(coords)) {
+            _moveSpeed = -1f;
+            _moveCoords = Vector3.down;
+            return true;
+        }
+
+        return false;
+    }
+
+    public string positionFromPiece(int dFile, int dRank) {
+        int f = file() + dFile;
+        int r = rank() + dRank;
+        if(!(f>=0 && f<=7)) return null;
+        if(!(r>=0 && r<=7)) return null;
+        
+        return FILE.Substring(f,1) + RANK.Substring(r,1);
     }
 
     public bool reposition(string newPosition) {
