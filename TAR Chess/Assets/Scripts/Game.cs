@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Game : MonoBehaviour {
-    public bool playerIsWhite;
+    public Piece.PieceColor playerColor = Piece.PieceColor.white;
     public string engineMoves = "";
     public int engineMoveIndex = 0;
     private string engineMove = "";

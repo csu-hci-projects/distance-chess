@@ -19,7 +19,11 @@ public class Piece : MonoBehaviour {
     public List<string> possibleMoves = new List<string>();
 
     void Start() {
-        
+        if(color == game.playerColor) {
+            gameObject.SetActive(false);
+        } else {
+            game.addPiece(this);
+        }
     }
 
     void Update() {
