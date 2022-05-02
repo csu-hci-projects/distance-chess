@@ -119,6 +119,22 @@ public class Game : MonoBehaviour {
     string getMovePosition(Piece piece) {
         if(engineMove is null || engineMove.Length < 2)
             return null;
+        if(engineMove.Length == 3) {
+            char file = engineMove[0];
+            if(file >= 'a' && file <= 'h') { // it's a pawn
+                if(engineMove[1] == '=') { // it's a promotion
+                    string rank = playerColor == Utils.PieceColor.white? "1":"8";
+                    return file + rank;
+                }
+            }
+            if(engineMove.Contains("o")) {
+                string rank = (piece.color == Utils.PieceColor.white? "1":"8");
+                if(engineMove.Equals("o o"))
+                    return (piece.type == Utils.PieceType.king? "c":"d") + rank;
+                if(engineMove.Equals("ooo"))
+                    return (piece.type == Utils.PieceType.king? "g":"f") + rank;
+            }
+        }
         return engineMove.Substring(engineMove.Length - 2);
     }
     void signalAllPiecesForUpdates() {
