@@ -58,8 +58,13 @@ public class Game : MonoBehaviour {
 
         if("abcdefgh".Contains(engineMove.Substring(0,1))) {
             char mtype = engineMove[1];
-            if("abcdefgh".Contains(""+mtype)) // pawn capture
+            if("abcdefgh".Contains(""+mtype)) { // pawn capture
+                if(engineMove.Length == 4 && engineMove[2] == '=') // with promotion, ex. e-capture-d promoting to queen would be `ed=q`
+                    return validateMove(
+                        engineMove[3] != 'k' && PIECEENUM.Contains(engineMove.Substring(3))
+                    );
                 return validateMove(Utils.validPosition(engineMove.Substring(1)));
+            }
             if(mtype == '=') // pawn promotion, ex. e-pawn to queen would be `e=q`
                 return validateMove(engineMove[2] != 'k' && PIECEENUM.Contains(engineMove.Substring(2)));
         }
@@ -132,6 +137,8 @@ public class Game : MonoBehaviour {
                 return false;
             if(engineMove[1] == '=' && "rnbq".Contains(engineMove.Substring(2)))
                 return piece.validMove(getMovePosition(piece));
+            if(engineMove.Length == 4 && engineMove[2] == '=' && "rnbq".Contains(engineMove.Substring(3)))
+                return piece.validMove(getMovePosition(piece));
 
             return piece.validMove(engineMove.Substring(1));
         }
@@ -155,6 +162,16 @@ public class Game : MonoBehaviour {
                     return (piece.type == Utils.king? "c":"d") + rank;
                 if(engineMove.Equals("ooo"))
                     return (piece.type == Utils.king? "g":"f") + rank;
+            }
+        }
+        if(engineMove.Length == 4) {
+            char file = engineMove[0];
+            if(file >= 'a' && file <= 'h') {
+                char nfile = engineMove[1];
+                if(nfile >= 'a' && nfile <= 'h' && engineMove[2] == '=') {
+                    string rank = playerColor == Utils.white? "1":"8";
+                    return "" + nfile + rank;
+                }
             }
         }
         return engineMove.Substring(engineMove.Length - 2);
