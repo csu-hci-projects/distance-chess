@@ -65,7 +65,7 @@ public class Game : MonoBehaviour {
                     );
                 return validateMove(Utils.validPosition(engineMove.Substring(1)));
             }
-            if(mtype == '=') // pawn promotion, ex. e-pawn to queen would be `e=q`
+            if(engineMove.Length == 3 && mtype == '=') // pawn promotion, ex. e-pawn to queen would be `e=q`
                 return validateMove(engineMove[2] != 'k' && PIECEENUM.Contains(engineMove.Substring(2)));
         }
 
@@ -109,7 +109,7 @@ public class Game : MonoBehaviour {
         done.Clear();
     }
     void getMoves() {
-        if(engineMove.Length < 2)
+        if(!validMove())
             return;
         if(moves.Count == 0) {
             foreach(Piece piece in pieces) {
@@ -135,9 +135,9 @@ public class Game : MonoBehaviour {
                 return false;
             if(piece.position[0] != engineMove[0])
                 return false;
-            if(engineMove[1] == '=' && "rnbq".Contains(engineMove.Substring(2)))
+            if(engineMove[1] == '=' && "rnsq".Contains(engineMove.Substring(2)))
                 return piece.validMove(getMovePosition(piece));
-            if(engineMove.Length == 4 && engineMove[2] == '=' && "rnbq".Contains(engineMove.Substring(3)))
+            if(engineMove.Length == 4 && engineMove[2] == '=' && "rnsq".Contains(engineMove.Substring(3)))
                 return piece.validMove(getMovePosition(piece));
 
             return piece.validMove(engineMove.Substring(1));
