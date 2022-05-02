@@ -16,14 +16,14 @@ public class Pawn : Piece {
         possibleMoves.Clear();
         int f=file(), r=rank(), fwd=forward();
         if(validMove(f, r+fwd)) {
-            possibleMoves.Add(Utils.position(f, r+fwd));
+            possibleMoves.Add(positionFromPiece(0, fwd));
             if(validMove(f, r+2*fwd))
-                possibleMoves.Add(Utils.position(f, r+2*fwd));
+                possibleMoves.Add(positionFromPiece(0, 2*fwd));
         }
         if(validMove(f-1, r+fwd))
-            possibleMoves.Add(Utils.position(f-1, r+fwd));
+            possibleMoves.Add(positionFromPiece(-1, fwd));
         if(validMove(f+1, r+fwd))
-            possibleMoves.Add(Utils.position(f+1, r+fwd));
+            possibleMoves.Add(positionFromPiece(1, fwd));
     }
 
     public override bool validMove(string move) => validMove(Utils.file(move), Utils.rank(move));
@@ -44,5 +44,4 @@ public class Pawn : Piece {
             return false;
     }
 
-    int forward(int distance = 1) => (color==PieceColor.white? 1:-1)*distance;
 }

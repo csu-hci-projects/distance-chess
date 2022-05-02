@@ -34,6 +34,7 @@ public class Piece : MonoBehaviour {
     }
     public int file() => Utils.file(position);
     public int rank() => Utils.rank(position);
+    protected int forward(int distance = 1) => (color==PieceColor.white? 1:-1)*distance;
 
     public virtual bool validMove(string move) => validMove(Utils.file(move), Utils.rank(move));
     public virtual bool validMove(int file, int rank) {
