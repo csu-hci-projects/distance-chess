@@ -17,28 +17,25 @@ public class Piece : MonoBehaviour {
     private const string FILE = "abcdefgh";
     private const string RANK = "12345678";
     public List<string> possibleMoves = new List<string>();
+    protected bool updated = false;
 
-    void Start() {
+    protected virtual void Start() {
         if(color == game.playerColor) {
+            game.kill(position);
             gameObject.SetActive(false);
         } else {
             game.addPiece(this);
         }
     }
 
-    void Update() {
-        
-    }
-
     public virtual void updatePossibleMoves() {
+        Debug.Log("Piece updating.");
         possibleMoves.Clear();
     }
     public int file() => Piece.file(position);
     public int rank() => Piece.rank(position);
 
-    public virtual bool validMove(string move) {
-        return false;
-    }
+    public virtual bool validMove(string move) => validMove(Piece.file(move), Piece.rank(move));
     public virtual bool validMove(int file, int rank) {
         return false;
     }
@@ -127,5 +124,11 @@ public class Piece : MonoBehaviour {
     public static int rank(string position) {
         if(!validPosition(position)) return -1;
         else return RANK.IndexOf(position[1]);
+    }
+    public static string Position(int file, int rank) {
+        if(file<0 || file>7 || rank<0 || rank>7)
+            return null;
+        else return
+            FILE.Substring(file,1) + RANK.Substring(rank,1);
     }
 }

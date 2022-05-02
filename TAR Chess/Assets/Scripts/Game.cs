@@ -29,9 +29,15 @@ public class Game : MonoBehaviour {
         pieces.Add(piece);
         board[piece.file(), piece.rank()] = piece;
     }
+    public void kill(string position) => kill(Piece.file(position), Piece.rank(position));
+    public void kill(int file, int rank) {
+        if(file<0 || file>7 || rank<0 || rank>7)
+            return;
+        board[file,rank] = null;
+    }
 
     public bool occupied(int file, int rank) {
-        return board[file,rank] is null;
+        return !(board[file,rank] is null);
     }
 
     public bool validMove() {
