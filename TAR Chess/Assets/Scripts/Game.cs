@@ -139,6 +139,8 @@ public class Game : MonoBehaviour {
             if(moves.Count > 0) {
                 if(moves.Count > 1 && !engineMove.Contains("o")) // moving piece ambiguity check: more than one piece can move iff castling
                     moves.Clear();
+                if(engineMove.Contains("o") && moves.Count != 2)
+                    moves.Clear();
                 engineMove = "";
                 engineMoveIndex = engineMoves.Length;
             }
