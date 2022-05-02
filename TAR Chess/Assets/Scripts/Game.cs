@@ -112,6 +112,12 @@ public class Game : MonoBehaviour {
         if(!validMove())
             return;
         if(moves.Count == 0) {
+            if(engineMove[0] == '-') {
+                kill(engineMove.Substring(1));
+                engineMove = "";
+                engineMoveIndex = engineMoves.Length;
+                return;
+            }
             foreach(Piece piece in pieces) {
                 if(appliesToPiece(piece)) {
                     moves.Add(piece, getMovePosition(piece));

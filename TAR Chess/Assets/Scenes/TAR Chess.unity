@@ -904,6 +904,16 @@ PrefabInstance:
       propertyPath: util
       value: 
       objectReference: {fileID: 2078483188}
+    - target: {fileID: 6356074503588724892, guid: e187b316755304b8396d3c14fa53dde7,
+        type: 3}
+      propertyPath: engineMoves
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6356074503588724892, guid: e187b316755304b8396d3c14fa53dde7,
+        type: 3}
+      propertyPath: playerColor
+      value: -1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e187b316755304b8396d3c14fa53dde7, type: 3}
 --- !u!4 &711610634 stripped
@@ -1114,8 +1124,8 @@ GameObject:
   m_Component:
   - component: {fileID: 887841177}
   m_Layer: 0
-  m_Name: newPieces
-  m_TagString: Untagged
+  m_Name: NewPieces
+  m_TagString: newPieces
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
