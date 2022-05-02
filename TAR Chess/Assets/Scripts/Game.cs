@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Game : MonoBehaviour {
+    public Utils util;
     public Utils.PieceColor playerColor = Utils.PieceColor.white;
     public string engineMoves = "";
     public int engineMoveIndex = 0;
@@ -12,7 +13,7 @@ public class Game : MonoBehaviour {
     public const float moveTime = 0.1f;
 
     void Start() {
-        
+        util.spawnPiece(this, Utils.PieceType.queen, "e1");
     }
 
     void Update() {
@@ -43,6 +44,8 @@ public class Game : MonoBehaviour {
     public bool validMove() {
         if(engineMove.Length < 2)
             return false;
+        if(engineMove[0] == '-' && Utils.validPosition(engineMove.Substring(1))) // kill piece at pos
+            return true;
         const string PIECEENUM = "rnsqk";
         if(validateMove(Utils.validPosition(engineMove)))
             return true;

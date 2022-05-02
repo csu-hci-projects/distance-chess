@@ -10,6 +10,9 @@ public class Utils : MonoBehaviour {
         pawn, rook, knight, bishop, queen, king
     };
     
+    public GameObject whiteRook, whiteKnight, whiteBishop, whiteQueen,
+                      blackRook, blackKnight, blackBishop, blackQueen;
+
     public static bool validPosition(string position) => file(position)!=-1 && rank(position)!=-1;
     public static string position(int file, int rank) {
         if(file<0 || file>7 || rank<0 || rank>7)
@@ -32,5 +35,35 @@ public class Utils : MonoBehaviour {
             return Vector3.down;
         else
             return new Vector3(x, 0, z);
+    }
+
+    public void spawnPiece(Game game, PieceType type, string position) {
+        if(!validPosition(position))
+            return;
+        GameObject prefabToSpawn =
+            game.playerColor == PieceColor.white? (
+                type == PieceType.rook? whiteRook :
+                type == PieceType.knight? whiteKnight :
+                type == PieceType.bishop? whiteBishop :
+                type == PieceType.queen? whiteQueen :
+                null
+            ) : (
+                type == PieceType.rook? blackRook :
+                type == PieceType.knight? blackKnight :
+                type == PieceType.bishop? blackBishop :
+                type == PieceType.queen? blackQueen :
+                null
+            )
+        ;
+
+        if(prefabToSpawn is null)
+            return;
+            
+        GameObject newPiece = Instantiate(prefabToSpawn);
+        newPiece.transform.SetParent(game.transform);
+        Piece piece = newPiece.GetComponent<Piece>() as Piece;
+        piece.game = game;
+        piece.reposition(position);
+        game.addPiece(piece);
     }
 }
