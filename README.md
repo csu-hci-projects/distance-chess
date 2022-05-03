@@ -3,6 +3,46 @@
 - Andreas Johnson
 - Isaac Mount
 
+# Project Overview
+The goal of this project is to explore how interfaces can affect users' cognitive performance.
+Chess offers an ideal task for testing this, being widely available in many interfaces.
+We will be testing a tangible augmented reality (TAR) interface and a digital interface.
+This repo is the code base for the TAR version of chess, while the digital version will be played on Chess.com.
+
+The end goal for this repo is to have a TAR chess application which recognizes a player's moves on a physical board, while rendering the moves from a digital opponent via the AR pieces.
+This will primarily be built for iOS, but future builds could include Android.
+
+## Current Progress
+- [x] Rendering of pieces
+  - [x] basic piece and board rendering
+  - [x] only renders opponents' pieces
+  - [x] dynamic positioning using QR code for placement
+  - [ ] occlusion (not implemented)
+- [x] Piece move scripting
+  - [x] animations
+  - [x] pawns
+  - [x] kings
+  - [x] rooks
+  - [x] knights
+  - [x] bishops
+  - [x] queens
+- [x] `Board` scripting
+  - [x] piece positions
+  - [x] castling
+  - [x] captures
+  - [x] en passant captures
+  - [x] pawn promotions
+- [ ] Computer Vision (not implemented)
+  - [ ] recognizes pieces
+  - [ ] recognizes moves
+  - [ ] checks for captures on player's pieces
+  - [ ] highlights legal move tiles when player picks up piece
+
+The reason computer vision is marked as "may not be implemented" is due to the scope of the project.
+If time permits, we will integrate computer vision into the application; however, if this is not the case, we may need to implement a developer interface which sidesteps the computer vision aspect.
+This would be the "Wizard of Oz" solution, in which we would tell the experiment's participants that the application recognizes their moves, while in reality the experimenters would be manually entering the participant's moves.
+This will already be done for the chess engine's moves, so the interface for the experimenters will already be present.
+
 # Instructions for Running Application
 ## Setup
 First, you will need to install [Unity](https://unity.com/).
@@ -20,6 +60,7 @@ In the Unity editor, select the `ARCamera` object from the scene hierarchy, then
 
 ![image](https://user-images.githubusercontent.com/34222063/166340121-52ef5822-9aa0-46de-86bb-dd1fed4fa3f3.png)
 ![image](https://user-images.githubusercontent.com/34222063/166340180-c02cbb79-c96a-4354-9de8-d267f8a5fa1c.png)
+
 Ensure there is a value for the `App License Key` field; if not included, you can add one for free from the Vuforia Developer Portal.
 Next, ensure there is a camera device (or your own recorded video).
 To do this, in the `Vuforia Engine Configuration` panel, scroll to the bottom and find the field `PlayMode Type`, under the section `Play Mode`.
@@ -88,49 +129,6 @@ We chose to modify PGN for ease of coding and entry.
 When the subject captures a computer's piece, use the notation `-<position>`, such that if the subject, playing as white, captured the computer's d-pawn (`d5`) with their e-pawn (`e4`), classic PGN would list the move as `exd5`.
 However, all we need to know is that the pawn on `d5` should no longer be rendered.
 So, the experimenter would simply enter `-d5`, where it is a single dash followed by the position of the piece to be removed.
-
-# Project Overview
-The goal of this project is to explore how interfaces can affect users' cognitive performance.
-Chess offers an ideal task for testing this, being widely available in many interfaces.
-We will be testing a tangible augmented reality (TAR) interface and a digital interface.
-This repo is the code base for the TAR version of chess, while the digital version will be played on Chess.com.
-
-The end goal for this repo is to have a TAR chess application which recognizes a player's moves on a physical board, while rendering the moves from a digital opponent via the AR pieces.
-This will primarily be built for iOS, but future builds could include Android.
-
-## Current Progress
-- [ ] Rendering of pieces
-  - [x] basic piece and board rendering
-  - [ ] only renders opponents' pieces (in progress)
-  - [ ] occlusion (may not be implemented)
-- [x] Piece move scripting
-  - [x] animations
-  - [x] pawns
-  - [x] kings
-  - [x] rooks
-  - [x] knights
-  - [x] bishops
-  - [x] queens
-- [ ] `Board` scripting
-  - [x] piece positions
-  - [x] attacks on tiles
-  - [ ] checks & checkmates (in progress)
-  - [ ] stalemates
-  - [ ] pins on pieces
-  - [x] castling
-  - [x] captures (in progress)
-  - [ ] en passant captures
-  - [ ] pawn promotions
-- [ ] Computer Vision (may not be implemented)
-  - [ ] recognizes pieces
-  - [ ] recognizes moves
-  - [ ] checks for captures on player's pieces
-  - [ ] highlights legal move tiles when player picks up piece
-
-The reason computer vision is marked as "may not be implemented" is due to the scope of the project.
-If time permits, we will integrate computer vision into the application; however, if this is not the case, we may need to implement a developer interface which sidesteps the computer vision aspect.
-This would be the "Wizard of Oz" solution, in which we would tell the experiment's participants that the application recognizes their moves, while in reality the experimenters would be manually entering the participant's moves.
-This will already be done for the chess engine's moves, so the interface for the experimenters will already be present.
 
 # Outside Resources
 ## Unity Software
