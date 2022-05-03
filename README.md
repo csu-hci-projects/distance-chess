@@ -17,6 +17,7 @@ Ensure that all required additional packages and modules are installed for Unity
 
 In order to use Vuforia, you must check the Vuforia configuration settings.
 In the Unity editor, select the `ARCamera` object from the scene hierarchy, then, under the `Vuforia Behaviour (Script)` Component in the Inspector Panel, select `Open Vuforia Engine Configuration`.
+
 ![image](https://user-images.githubusercontent.com/34222063/166340121-52ef5822-9aa0-46de-86bb-dd1fed4fa3f3.png)
 ![image](https://user-images.githubusercontent.com/34222063/166340180-c02cbb79-c96a-4354-9de8-d267f8a5fa1c.png)
 Ensure there is a value for the `App License Key` field; if not included, you can add one for free from the Vuforia Developer Portal.
@@ -24,6 +25,7 @@ Next, ensure there is a camera device (or your own recorded video).
 To do this, in the `Vuforia Engine Configuration` panel, scroll to the bottom and find the field `PlayMode Type`, under the section `Play Mode`.
 This is the video feed input for the AR to be rendered over.
 For this experiment, we used a webcam, in which we selected `WEBCAM` for `PlayMode Type` and selected the proper device, which should be automatically detected by the Vuforia Engine.
+
 ![image](https://user-images.githubusercontent.com/34222063/166340643-54efac8e-fe3f-4b07-b1b9-d11089ab3265.png)
 
 Now, we need to ensure that the `ImageTarget` is set up appropriately.
@@ -31,11 +33,13 @@ As above, select the `ImageTarget` object from the scene hierarchy to open the U
 In the `Image Target Behaviour (Script)` component, please ensure that `From Image` is selected for the field `Type`, and that `Assets/QR-A.jpg` is the image being used.
 Under the `Advanced` section, please ensure that the field `Physical Width (m)` has the value `0.127` (5 inches).
 See screenshot below.
+
 ![image](https://user-images.githubusercontent.com/34222063/166340970-4b70ebdf-9c58-45c5-8fa2-2ba3840fc9ba.png)
 
 To test if Vuforia is working properly, simply click the play button in the Unity editor; if you start getting a camera feed, the configuration is complete and correct.
 
 ## Experiment
+
 ![image](https://user-images.githubusercontent.com/34222063/166344617-3c08ed92-39b3-4120-bbd5-d159072b7a0b.png)
 
 ### Experiment Setup & Configuration
