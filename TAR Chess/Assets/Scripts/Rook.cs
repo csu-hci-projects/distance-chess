@@ -16,7 +16,8 @@ public class Rook : Piece {
         if(cf == file && cr == rank)
             return false;
         for(int dist=1; dist<Mathf.Abs(file-cf); ++dist) {
-            if(game.occupied((cf==file? cf:cf+dist), (cr==rank? cr:cr+dist)))
+            int f=(cf==file? cf:cf+dist), r=(cr==rank? cr:cr+dist);
+            if(game.occupied(f, r))
                 return false;
         }
         return base.validMove(file, rank);

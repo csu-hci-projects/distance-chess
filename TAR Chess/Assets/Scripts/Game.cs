@@ -41,6 +41,8 @@ public class Game : MonoBehaviour {
     }
 
     public bool occupied(int file, int rank) {
+        if(file<0 || file>7 || rank<0 || rank>7)
+            return false;
         return !(board[file,rank] is null);
     }
 
@@ -133,7 +135,9 @@ public class Game : MonoBehaviour {
                 return;
             } else foreach(Piece piece in pieces) {
                 if(appliesToPiece(piece)) {
-                    moves.Add(piece, getMovePosition(piece));
+                    try {
+                        moves.Add(piece, getMovePosition(piece));
+                    } catch { }
                 }
             }
             if(moves.Count > 0) {
