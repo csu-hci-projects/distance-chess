@@ -100,7 +100,11 @@ public class Game : MonoBehaviour {
         getMoves();
         foreach(KeyValuePair<Piece, string> move in moves) {
             Piece piece = move.Key;
-            if(piece.glideTo(move.Value)) done.Add(move.Key, move.Value);
+            board[piece.file(), piece.rank()] = null;
+            if(piece.glideTo(move.Value)) {
+                done.Add(move.Key, move.Value);
+                board[piece.file(), piece.rank()] = piece;
+            }
         }
         foreach(Piece p in done.Keys) {
             moves.Remove(p);
@@ -151,6 +155,8 @@ public class Game : MonoBehaviour {
         }
     }
     bool appliesToPiece(Piece piece) {
+        if(!piece.gameObject.activeInHierarchy)
+            return false;
         if(Utils.validPosition(engineMove)) {
             if(piece.type != Utils.pawn)
                 return false;

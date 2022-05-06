@@ -10,16 +10,27 @@ public class Rook : Piece {
 
     public override bool validMove(string move) => validMove(Utils.file(move), Utils.rank(move));
     public override bool validMove(int file, int rank) {
+        if(game.occupied(file,rank))
+            return false;
         int cf=this.file(), cr=this.rank();
         if(cf != file && cr != rank)
             return false;
         if(cf == file && cr == rank)
             return false;
-        for(int dist=1; dist<Mathf.Abs(file-cf); ++dist) {
-            int f=(cf==file? cf:cf+dist), r=(cr==rank? cr:cr+dist);
+        int maxDist = Mathf.Max( Mathf.Abs(file - cf), Mathf.Abs(rank - cr) );
+        int dir = maxDist;
+        if(cf == file)
+            dir /= rank - cr;
+        else
+            dir /= file - cf;
+        for(int dist=1; dist<maxDist; ++dist) {
+            int f = cf + dist*dir, r = cr + dist*dir;
+            if(cf == file) f = file;
+            else r = rank;
+
             if(game.occupied(f, r))
                 return false;
         }
-        return base.validMove(file, rank);
+        return true;
     }
 }
