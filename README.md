@@ -10,7 +10,7 @@ We will be testing a tangible augmented reality (TAR) interface and a digital in
 This repo is the code base for the TAR version of chess, while the digital version will be played on Chess.com.
 
 The end goal for this repo is to have a TAR chess application which recognizes a player's moves on a physical board, while rendering the moves from a digital opponent via the AR pieces.
-This will primarily be built for iOS, but future builds could include Android.
+The initial goal for this project was to have it built for iOS, but due to time limitations, the application does not have an interface, and as such must be run within the Unity Editor.
 
 ## Current Progress
 - [x] Rendering of pieces
@@ -38,10 +38,9 @@ This will primarily be built for iOS, but future builds could include Android.
   - [ ] checks for captures on player's pieces
   - [ ] highlights legal move tiles when player picks up piece
 
-The reason computer vision is marked as "may not be implemented" is due to the scope of the project.
-If time permits, we will integrate computer vision into the application; however, if this is not the case, we may need to implement a developer interface which sidesteps the computer vision aspect.
-This would be the "Wizard of Oz" solution, in which we would tell the experiment's participants that the application recognizes their moves, while in reality the experimenters would be manually entering the participant's moves.
-This will already be done for the chess engine's moves, so the interface for the experimenters will already be present.
+Computer vision was not implemented for this project due to time restrictions, so the application is still in its prototype form.
+The experiment was conducted entirely within the Unity Editor, using the Inspector Panel as a developer input mechanism.
+Moves are entered for the pieces via text entry, as explained below.
 
 # Instructions for Running Application
 ## Setup
@@ -55,7 +54,8 @@ Ensure that all required additional packages and modules are installed for Unity
 - ARKit XR Plugin (for Android) (not used, but imported in current version)
 - Vuforia Core Samples
 
-In order to use Vuforia, you must check the Vuforia configuration settings.
+Vuforia could not be pushed to this repo, so in order to run the application, you *must* import the Vuforia Core Samples package, available on the Unity Asset Store.
+In order to use Vuforia, you must check the Vuforia configuration settings and ensure that the following steps are followed.
 In the Unity editor, select the `ARCamera` object from the scene hierarchy, then, under the `Vuforia Behaviour (Script)` Component in the Inspector Panel, select `Open Vuforia Engine Configuration`.
 
 ![image](https://user-images.githubusercontent.com/34222063/166340121-52ef5822-9aa0-46de-86bb-dd1fed4fa3f3.png)
@@ -94,6 +94,7 @@ This scales all the pieces being rendered, as well as the "abstract tiles" used 
 
 Once you press play, ensure that the QR code is visible in the camera feed, and adjust the camera as necessary to include visibility for the entire physical board.
 Reposition the QR-code printout so that the pieces line up with the tiles on the physical board.
+Note that the QR-code must be on the white's kingside corner of the board, and as such must be moved to the opposite corner and rotated when switching colors between trials.
 Great!
 You are now done with all the setup and can begin rendering moves.
 
@@ -108,11 +109,11 @@ As we are comparing performance between interfaces, the difficulty of the engine
 To actually have the subject play the game, after selecting the difficuly of the computer opponent, the experimenter will play the subject's moves against the computer opponent using Chess.com, then enter the moves of the computer opponent on the experiment application.
 
 #### Entering the Computer's Moves
-To enter the computer's moves, the experimenter should have the inspector panel open for the `Board` object during execution.
-Then, given a computer move from Chess.com, the experimenter will enter a PGN-like value into the `Engine Moves` field.
-For accuracy, the experimenter can see the current registered move in the field `Engine Move`.
-Deleting the previous values in `Engine Moves` field is not required.
-The application will simply grab the move at the end of the string.
+To enter the computer's moves, the experimenter should have the inspector panel open for the `Board` object during execution in Unity Editor's "Play" mode.
+Then, given a computer move from Chess.com, the experimenter will enter a PGN-like value into the `Engine Moves` field (see next paragraph for details).
+For correctness, the experimenter can see the current registered move in the field `Engine Move`.
+Deleting the previous values in `Engine Moves` field will cause an index-out-of-bounds fatal error.
+Instead, ensure that any deletion of characters in the field does not go beyond the `Engine Move` contents.
 
 We chose to modify PGN for ease of coding and entry.
 - Pawn Moves: for simple forward moves, use the format `<pawn file><rank to move to>`, such as `e4` for moving the pawn on `e2` to `e4`. For captures, rather than classic PGN, which for example would be `exd5` for pawn on `e4` capturing on `d5`, it is simply `<capturing pawn file><captured tile>`, such as `ed5` for the previous example. For promotions, it is simply `<pawn file>=<piece type>` for forward promotions, such as `e=q` for the pawn on `e7` moving to `e8` and promoting to a queen. For capture-promotions, use the format `<capturing pawn file><captured file>=<piece type>`, such as `ed=q` for the pawn on `e7` to capture on `d8` and promoting to a queen.
